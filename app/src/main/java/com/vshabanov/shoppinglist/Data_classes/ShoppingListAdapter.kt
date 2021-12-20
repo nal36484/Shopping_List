@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.R
 
-class ShoppingListAdapter(private val names: List<ShoppingList>):
+class ShoppingListAdapter(private var names: MutableList<ShoppingList>):
     RecyclerView.Adapter<ShoppingListAdapter.MyViewHolder>() {
-    
+
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var nameList: TextView? = null
         var count: TextView? = null
@@ -36,5 +38,6 @@ class ShoppingListAdapter(private val names: List<ShoppingList>):
         return names.size
     }
 }
+
 
 

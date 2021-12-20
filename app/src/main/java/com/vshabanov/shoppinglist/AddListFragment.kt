@@ -31,7 +31,7 @@ class AddListFragment : Fragment() {
 
         createButton.setOnClickListener {
             val name = editText.text.toString()
-            val action = AddListFragmentDirections.actionAddListFragmentToStartFragment(name)
+            val action = AddListFragmentDirections.actionAddListFragmentToListNameFragment(name)
             view.findNavController().navigate(action) }
     }
 

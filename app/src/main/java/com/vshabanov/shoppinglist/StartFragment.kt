@@ -15,6 +15,7 @@ import com.vshabanov.shoppinglist.Data_classes.ShoppingListAdapter
 class StartFragment : Fragment() {
 
     var names: MutableList<ShoppingList> = arrayListOf()
+    val shoppingListAdapter: ShoppingListAdapter = ShoppingListAdapter(names)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -30,18 +31,17 @@ class StartFragment : Fragment() {
         list.layoutManager = LinearLayoutManager(context)
         list.adapter = ShoppingListAdapter(names)
         return rootView
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val addButton: FloatingActionButton = view.findViewById(R.id.button_add)
-        val args: StartFragmentArgs by navArgs()
+        /*val args: StartFragmentArgs by navArgs()
         val nameList = args.nameList
         if (args.nameList=="")
             names.add(ShoppingList())
         else
-            names.add(ShoppingList(nameList))
+            names.add(ShoppingList(nameList))*/
 
         addButton.setOnClickListener {
             view.findNavController().navigate(R.id.addListFragment) }
