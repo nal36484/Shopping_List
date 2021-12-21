@@ -6,14 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.Data_classes.ShoppingItemAdapter
 
-class ListNameFragment : Fragment() {
+class ListNameFragment : Fragment(),ShoppingItemAdapter.ClickListener {
 
     var names: MutableList<ShoppingItem> = arrayListOf()
+    private lateinit var adapter: ShoppingItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -25,9 +27,15 @@ class ListNameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_list_name, container, false)
-        val list: RecyclerView = rootView.findViewById(R.id.recyclerViewProducts)
-        list.adapter = ShoppingItemAdapter(names)
+        initShoppingItemAdapter(rootView)
         return rootView
+    }
+
+    fun initShoppingItemAdapter(view: View) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = ShoppingItemAdapter(names,this)
+        recyclerView.adapter = adapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,5 +58,9 @@ class ListNameFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Shopping List"
+    }
+
+    override fun onItemClick(shoppingItem: ShoppingItem) {
+        TODO("Not yet implemented")
     }
 }

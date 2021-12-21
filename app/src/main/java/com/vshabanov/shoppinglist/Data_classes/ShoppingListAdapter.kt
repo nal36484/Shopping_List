@@ -4,12 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.R
 
-class ShoppingListAdapter(private var names: MutableList<ShoppingList>):
+class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private val clickListener: ClickListener):
     RecyclerView.Adapter<ShoppingListAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -29,15 +27,24 @@ class ShoppingListAdapter(private var names: MutableList<ShoppingList>):
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val shoppingList = names.get(position)
-        holder.nameList?.setText(shoppingList.name)
-        holder.count?.setText(shoppingList.count)
+        val list = shoppingList.get(position)
+        holder.nameList?.setText(list.name)
+        holder.count?.setText(list.count)
+        holder.itemView.setOnClickListener {
+            clickListener.onListClick(list)
+        }
     }
 
     override fun getItemCount(): Int {
-        return names.size
+        return shoppingList.size
+    }
+
+    interface ClickListener {
+        fun onListClick(shoppingList: ShoppingList)
     }
 }
+
+
 
 
 

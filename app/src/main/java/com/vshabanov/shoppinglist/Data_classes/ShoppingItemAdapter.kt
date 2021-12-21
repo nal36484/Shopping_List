@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.R
 
-class ShoppingItemAdapter(private var names: List<ShoppingItem>):
+class ShoppingItemAdapter(var names: MutableList<ShoppingItem>,private val clickListener: ClickListener):
     RecyclerView.Adapter<ShoppingItemAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -36,9 +36,16 @@ class ShoppingItemAdapter(private var names: List<ShoppingItem>):
         holder.productName?.setText(productName.name)
         holder.amount?.setText(productName.amount)
         holder.price?.setText(productName.price.toString()+"₽")
+        holder.itemView.setOnClickListener {
+            clickListener.onItemClick(productName)
+        }
     }
 
     override fun getItemCount(): Int {
         return names.size
+    }
+
+    interface ClickListener {
+        fun onItemClick(shoppingItem: ShoppingItem)
     }
 }
