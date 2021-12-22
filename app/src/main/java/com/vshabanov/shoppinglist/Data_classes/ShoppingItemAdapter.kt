@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.R
 
-class ShoppingItemAdapter(var names: MutableList<ShoppingItem>,private val clickListener: ClickListener):
+class ShoppingItemAdapter(var items: MutableList<ShoppingItem>,private val clickListener: ClickListener):
     RecyclerView.Adapter<ShoppingItemAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -32,17 +32,17 @@ class ShoppingItemAdapter(var names: MutableList<ShoppingItem>,private val click
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val productName = names.get(position)
-        holder.productName?.setText(productName.name)
-        holder.amount?.setText(productName.amount)
-        holder.price?.setText(productName.price.toString()+"₽")
+        val item = items.get(position)
+        holder.productName?.setText(item.name)
+        holder.amount?.setText(item.amount)
+        holder.price?.setText(item.price.toString()+"₽")
         holder.itemView.setOnClickListener {
-            clickListener.onItemClick(productName)
+            clickListener.onItemClick(item)
         }
     }
 
     override fun getItemCount(): Int {
-        return names.size
+        return items.size
     }
 
     interface ClickListener {

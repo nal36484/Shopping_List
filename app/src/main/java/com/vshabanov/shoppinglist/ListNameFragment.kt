@@ -12,9 +12,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.Data_classes.ShoppingItemAdapter
 
-class ListNameFragment : Fragment(),ShoppingItemAdapter.ClickListener {
+class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
 
-    var names: MutableList<ShoppingItem> = arrayListOf()
+    var items: MutableList<ShoppingItem> = arrayListOf()
     private lateinit var adapter: ShoppingItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class ListNameFragment : Fragment(),ShoppingItemAdapter.ClickListener {
     fun initShoppingItemAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ShoppingItemAdapter(names,this)
+        adapter = ShoppingItemAdapter(items,this)
         recyclerView.adapter = adapter
     }
 

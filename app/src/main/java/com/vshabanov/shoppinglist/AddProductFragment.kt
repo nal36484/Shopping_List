@@ -1,14 +1,22 @@
 package com.vshabanov.shoppinglist
 
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.vshabanov.shoppinglist.Data_classes.AddProductAdapter
+import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
+import com.vshabanov.shoppinglist.Data_classes.ShoppingItemAdapter
 
-class Product_Add_Fragment : Fragment() {
+class Product_Add_Fragment : Fragment(), AddProductAdapter.ClickListener {
+
+    var items: MutableList<ShoppingItem> = arrayListOf()
+    private lateinit var adapter: AddProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
     }
 
@@ -16,7 +24,38 @@ class Product_Add_Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_product, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_add_product, container, false)
+        initAddProductAdapter(rootView)
+        return rootView
+    }
+
+    fun initAddProductAdapter(view: View) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = AddProductAdapter(items,this)
+        recyclerView.adapter = adapter
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.fragment_add_product,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //(requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //(requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(true)
+    }
+
+    override fun onItemClick(shoppingItem: ShoppingItem) {
+        TODO("Not yet implemented")
     }
 }

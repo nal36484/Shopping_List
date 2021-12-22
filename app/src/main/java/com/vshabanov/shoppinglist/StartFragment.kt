@@ -12,7 +12,7 @@ import com.vshabanov.shoppinglist.Data_classes.ShoppingList
 import com.vshabanov.shoppinglist.Data_classes.ShoppingListAdapter
 
 
-class StartFragment : Fragment(),ShoppingListAdapter.ClickListener {
+class StartFragment : Fragment(), ShoppingListAdapter.ClickListener {
 
     var shoppingList: MutableList<ShoppingList> = arrayListOf()
     private lateinit var adapter: ShoppingListAdapter
