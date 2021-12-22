@@ -14,6 +14,9 @@
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_full_screen.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_fullscreen.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_list_name.xml" value="0.20520833333333333" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_login.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_registration.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_sign_in.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_start.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/list_add_products.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/list_items.xml" value="0.22" />
@@ -23,6 +26,7 @@
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/menu/fragment_add_product.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/menu/fragment_start.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/menu/list_item_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/menu/menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/menu/start_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/menu/toolbar_menu.xml" value="0.36666666666666664" />
       </map>

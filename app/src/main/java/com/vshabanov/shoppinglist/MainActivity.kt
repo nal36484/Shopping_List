@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.Data_classes.ShoppingList
 
 class MainActivity : AppCompatActivity() {
