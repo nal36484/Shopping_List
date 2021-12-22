@@ -6,7 +6,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="gamburger">Гамбургер</string>
-    <string name="login">Вход</string>
+    <string name="login">Имя пользователя</string>
     <string name="button_add">Создать список</string>
     <string name="menu_send">Отправить</string>
     <string name="menu_change">Изменить</string>
@@ -17,4 +17,9 @@
     <string name="list_help">Название списка</string>
     <string name="defaultCount">1</string>
     <string name="defaultPrice">0₽</string>
+    <string name="sign_in">Войти</string>
+    <string name="registration">Регистрация</string>
+    <string name="password">Пароль</string>
+    <string name="email">Электронная почта</string>
+    <string name="phone_number">Номер телефона</string>
 </resources>

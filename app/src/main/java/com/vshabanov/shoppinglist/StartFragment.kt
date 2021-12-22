@@ -1,13 +1,18 @@
 package com.vshabanov.shoppinglist
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.ktx.Firebase
+import com.vshabanov.shoppinglist.Data_classes.MyDialogFragment
 import com.vshabanov.shoppinglist.Data_classes.ShoppingList
 import com.vshabanov.shoppinglist.Data_classes.ShoppingListAdapter
 
@@ -51,6 +56,15 @@ class StartFragment : Fragment(), ShoppingListAdapter.ClickListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.fragment_start,menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            //android.R.id.home -> findNavController().navigate(R.id.listNameFragment)
+            R.id.personal -> findNavController().navigate(R.id.loginFragment)
+        //MyDialogFragment().show(childFragmentManager,"custom")
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onListClick(shoppingList: ShoppingList) {
