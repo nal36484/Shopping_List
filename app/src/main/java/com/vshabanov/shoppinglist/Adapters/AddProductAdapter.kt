@@ -1,4 +1,4 @@
-package com.vshabanov.shoppinglist.Data_classes
+package com.vshabanov.shoppinglist.Adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
 
-class AddProductAdapter(var items: MutableList<ShoppingItem>,private val clickListener: ClickListener):
+class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickListener: ClickListener):
     RecyclerView.Adapter<AddProductAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -24,7 +25,7 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>,private val clickLi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_add_products,parent,false)
-        return AddProductAdapter.MyViewHolder(itemView)
+        return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

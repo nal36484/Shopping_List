@@ -2,13 +2,11 @@ package com.vshabanov.shoppinglist
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vshabanov.shoppinglist.Data_classes.AddProductAdapter
+import com.vshabanov.shoppinglist.Adapters.AddProductAdapter
 import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
-import com.vshabanov.shoppinglist.Data_classes.ShoppingItemAdapter
 
 class Product_Add_Fragment : Fragment(), AddProductAdapter.ClickListener {
 

@@ -1,10 +1,12 @@
-package com.vshabanov.shoppinglist.Data_classes
+package com.vshabanov.shoppinglist.Adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.vshabanov.shoppinglist.Data_classes.ShoppingList
 import com.vshabanov.shoppinglist.R
 
 class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private val clickListener: ClickListener):
@@ -13,10 +15,12 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var nameList: TextView? = null
         var count: TextView? = null
+        var menu: ImageButton? = null
 
         init {
             nameList = itemView.findViewById(R.id.name_list)
             count = itemView.findViewById(R.id.amount)
+            menu = itemView.findViewById(R.id.menu_status)
         }
     }
 
@@ -30,8 +34,11 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
         val list = shoppingList.get(position)
         holder.nameList?.setText(list.name)
         holder.count?.setText(list.count)
-        holder.itemView.setOnClickListener {
+        holder.nameList?.setOnClickListener {
             clickListener.onListClick(list)
+        }
+        holder.menu?.setOnClickListener{
+            clickListener.onMenuClick(list,position)
         }
     }
 
@@ -41,6 +48,7 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
 
     interface ClickListener {
         fun onListClick(shoppingList: ShoppingList)
+        fun onMenuClick(shoppingList: ShoppingList,position: Int)
     }
 }
 

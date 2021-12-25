@@ -26,7 +26,7 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val signIn: Button = view.findViewById(R.id.button_sign_in)
-        signIn.setOnClickListener{ view.findNavController().navigate(R.id.startFragment) }
+        //signIn.setOnClickListener{ view.findNavController().navigate(R.id.homeFragment) }
     }
 
     override fun onResume() {

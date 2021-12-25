@@ -26,7 +26,7 @@ class RegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val registration: Button = view.findViewById(R.id.apply_registration)
-        registration.setOnClickListener{ view.findNavController().navigate(R.id.startFragment) }
+        //registration.setOnClickListener{ view.findNavController().navigate(R.id.HomeFragment) }
     }
 
     override fun onResume() {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.vshabanov.shoppinglist.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_addListFragment"
+            app:destination="@id/addListFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_listNameFragment"
+            app:destination="@id/listNameFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.vshabanov.shoppinglist.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.vshabanov.shoppinglist.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/addListFragment"
+        android:name="com.vshabanov.shoppinglist.AddListFragment"
+        android:label="fragment_add_list"
+        tools:layout="@layout/fragment_add_list" >
+        <action
+            android:id="@+id/action_addListFragment_to_listNameFragment"
+            app:destination="@id/listNameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listNameFragment"
+        android:name="com.vshabanov.shoppinglist.ListNameFragment"
+        android:label="fragment_list_name"
+        tools:layout="@layout/fragment_list_name" >
+        <action
+            android:id="@+id/action_listNameFragment_to_product_Add_Fragment"
+            app:destination="@id/product_Add_Fragment" />
+        <argument
+            android:name="name"
+            android:defaultValue="Новый Список" />
+    </fragment>
+    <fragment
+        android:id="@+id/product_Add_Fragment"
+        android:name="com.vshabanov.shoppinglist.Product_Add_Fragment"
+        android:label="fragment_add_product"
+        tools:layout="@layout/fragment_add_product" />
+</navigation>

@@ -1,20 +1,15 @@
 package com.vshabanov.shoppinglist
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.ktx.Firebase
-import com.vshabanov.shoppinglist.Data_classes.MyDialogFragment
 import com.vshabanov.shoppinglist.Data_classes.ShoppingList
-import com.vshabanov.shoppinglist.Data_classes.ShoppingListAdapter
+import com.vshabanov.shoppinglist.Adapters.ShoppingListAdapter
 
 
 class StartFragment : Fragment(), ShoppingListAdapter.ClickListener {
@@ -25,9 +20,6 @@ class StartFragment : Fragment(), ShoppingListAdapter.ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
-        // tmp release
-        shoppingList.add(0, ShoppingList())
-        shoppingList.add(1,ShoppingList("asah"))
     }
 
     override fun onCreateView(
@@ -69,5 +61,9 @@ class StartFragment : Fragment(), ShoppingListAdapter.ClickListener {
 
     override fun onListClick(shoppingList: ShoppingList) {
         findNavController().navigate(R.id.listNameFragment)
+    }
+
+    override fun onMenuClick(shoppingList: ShoppingList,position : Int) {
+        TODO("Not yet implemented")
     }
 }

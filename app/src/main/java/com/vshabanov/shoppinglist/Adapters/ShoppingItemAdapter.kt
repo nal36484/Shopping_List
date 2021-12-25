@@ -1,4 +1,4 @@
-package com.vshabanov.shoppinglist.Data_classes
+package com.vshabanov.shoppinglist.Adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
 
-class ShoppingItemAdapter(var items: MutableList<ShoppingItem>,private val clickListener: ClickListener):
+class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clickListener: ClickListener):
     RecyclerView.Adapter<ShoppingItemAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
