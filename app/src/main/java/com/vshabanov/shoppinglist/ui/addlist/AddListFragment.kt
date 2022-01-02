@@ -1,6 +1,5 @@
-package com.vshabanov.shoppinglist
+package com.vshabanov.shoppinglist.ui.addlist
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,16 +9,18 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.findNavController
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.vshabanov.shoppinglist.Data_classes.ShoppingList
+import com.google.firebase.ktx.Firebase
+import com.vshabanov.shoppinglist.R
+import com.vshabanov.shoppinglist.data_classes.ShoppingList
 
 class AddListFragment : Fragment() {
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    var reference: DatabaseReference = database.getReference()
+    var reference: DatabaseReference = database.getReference().child("users")
+    val auth = Firebase.auth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,26 +34,37 @@ class AddListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val createButton: Button = view.findViewById(R.id.button_create)
-        val editText = view.findViewById<EditText>(R.id.list_name)
+        val listName = view.findViewById<EditText>(R.id.list_name)
 
         createButton.setOnClickListener {
-            val name = editText.text.toString()
+            val name = listName.text.toString()
             if (name=="")
-                reference.push().setValue(ShoppingList())
+                writeNewPost("Новый список")
             else
-                reference.push().setValue(ShoppingList(name = name))
+                writeNewPost(name)
             val action = AddListFragmentDirections.actionAddListFragmentToListNameFragment(name)
             view.findNavController().navigate(action) }
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onStop() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0)
         super.onStop()
+    }
+
+    private fun writeNewPost(name: String) {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        val key = reference.push().key
+        val userId = auth.currentUser?.uid
+        val post = ShoppingList(key, name)
+        val postValues = post.toMap()
+
+        val childUpdates = hashMapOf<String, Any>(
+            "$userId/list/$key" to postValues,
+        )
+
+        reference.updateChildren(childUpdates)
     }
 }
 

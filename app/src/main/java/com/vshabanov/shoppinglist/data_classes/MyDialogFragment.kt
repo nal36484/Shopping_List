@@ -1,10 +1,9 @@
-package com.vshabanov.shoppinglist.Data_classes
+package com.vshabanov.shoppinglist.data_classes
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.vshabanov.shoppinglist.R
 
 class MyDialogFragment: DialogFragment() {
 

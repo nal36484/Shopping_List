@@ -1,4 +1,4 @@
-package com.vshabanov.shoppinglist.Adapters
+package com.vshabanov.shoppinglist.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
+import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
 
 class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clickListener: ClickListener):
@@ -37,8 +37,8 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
         holder.productName?.setText(item.name)
         holder.amount?.setText(item.amount)
         holder.price?.setText(item.price.toString()+"₽")
-        holder.itemView.setOnClickListener {
-            clickListener.onItemClick(item)
+        holder.amount?.setOnClickListener {
+            clickListener.onItemClick(view = it,item)
         }
     }
 
@@ -47,6 +47,6 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
     }
 
     interface ClickListener {
-        fun onItemClick(shoppingItem: ShoppingItem)
+        fun onItemClick(view: View,shoppingItem: ShoppingItem)
     }
 }

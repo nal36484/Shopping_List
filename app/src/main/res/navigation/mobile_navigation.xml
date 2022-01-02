@@ -31,7 +31,7 @@
         tools:layout="@layout/fragment_slideshow" />
     <fragment
         android:id="@+id/addListFragment"
-        android:name="com.vshabanov.shoppinglist.AddListFragment"
+        android:name="com.vshabanov.shoppinglist.ui.addlist.AddListFragment"
         android:label="fragment_add_list"
         tools:layout="@layout/fragment_add_list" >
         <action
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/listNameFragment"
-        android:name="com.vshabanov.shoppinglist.ListNameFragment"
+        android:name="com.vshabanov.shoppinglist.ui.itemshow.ListNameFragment"
         android:label="fragment_list_name"
         tools:layout="@layout/fragment_list_name" >
         <action
@@ -52,7 +52,11 @@
     </fragment>
     <fragment
         android:id="@+id/product_Add_Fragment"
-        android:name="com.vshabanov.shoppinglist.Product_Add_Fragment"
+        android:name="com.vshabanov.shoppinglist.AddProductFragment"
         android:label="fragment_add_product"
-        tools:layout="@layout/fragment_add_product" />
+        tools:layout="@layout/fragment_add_product" >
+        <argument
+            android:name="name"
+            android:defaultValue="Новый список" />
+    </fragment>
 </navigation>

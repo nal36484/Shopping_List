@@ -1,4 +1,4 @@
-package com.vshabanov.shoppinglist.Adapters
+package com.vshabanov.shoppinglist.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.vshabanov.shoppinglist.Data_classes.ShoppingItem
+import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
 
 class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickListener: ClickListener):
@@ -31,8 +31,8 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items.get(position)
         holder.productName?.setText(item.name)
-        holder.productName?.setText(item.price)
-        holder.itemView.setOnClickListener {
+        holder.amount?.setText(item.price)
+        holder.productName?.setOnClickListener {
             clickListener.onItemClick(item)
         }
     }
