@@ -1,6 +1,7 @@
 package com.vshabanov.shoppinglist.ui.addlist
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,13 @@ class AddListFragment : Fragment() {
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     var reference: DatabaseReference = database.getReference().child("users")
     val auth = Firebase.auth
+
+    private lateinit var settings: SharedPreferences
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        settings = context?.getSharedPreferences("listId", Context.MODE_PRIVATE)!!
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,16 +63,17 @@ class AddListFragment : Fragment() {
     private fun writeNewPost(name: String) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        val key = reference.push().key
+        val key = reference.push().key.toString()
         val userId = auth.currentUser?.uid
         val post = ShoppingList(key, name)
         val postValues = post.toMap()
-
         val childUpdates = hashMapOf<String, Any>(
             "$userId/list/$key" to postValues,
         )
-
         reference.updateChildren(childUpdates)
+        val editor = settings.edit()
+        editor.putString("listId",key)
+        editor.apply()
     }
 }
 

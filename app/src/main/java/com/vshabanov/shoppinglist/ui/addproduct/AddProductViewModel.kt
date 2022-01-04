@@ -1,4 +1,4 @@
-package com.vshabanov.shoppinglist.ui.itemshow
+package com.vshabanov.shoppinglist.ui.addproduct
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -6,11 +6,10 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 
-class ListNameViewModel(application: Application): AndroidViewModel(application) {
+class AddProductViewModel(application: Application): AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
     val context = application.applicationContext

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.FirebaseApp
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
 import com.vshabanov.shoppinglist.R
@@ -97,7 +98,7 @@ class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
                 view.findNavController().navigate(action)
     }
 
-    override fun onMenuClick(view: View,shoppingList: ShoppingList,position: Int) {
+    override fun onMenuClick(view: View,shoppingList: ShoppingList) {
         showMenu(view.findViewById(R.id.menu_status),shoppingList)
     }
 }

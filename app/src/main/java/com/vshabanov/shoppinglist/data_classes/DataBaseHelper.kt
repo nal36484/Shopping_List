@@ -1,23 +1,25 @@
 package com.vshabanov.shoppinglist.data_classes
 
-import android.app.Application
-import android.content.SharedPreferences
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
-class DataBaseHelper(){
+class DataBaseHelper() {
     var database: FirebaseDatabase
     var referenceList: DatabaseReference
     val shoppingList: MutableList<ShoppingList> = arrayListOf()
-    val shoppingItem: MutableList<ShoppingItem> = arrayListOf()
-    var id: String? = Firebase.auth.currentUser?.uid
-    var key: String? = null
+    val shoppingItems: MutableList<ShoppingItem> = arrayListOf()
+    var id: String?
+    var shoppingItem: ShoppingItem? = null
 
     init {
+        id = Firebase.auth.currentUser?.uid
         database = FirebaseDatabase.getInstance()
         referenceList = database.getReference().child("users").child(id.toString()).child("list")
     }
+
 
     interface ListStatus {
         fun dataIsLoaded(shoppingList: MutableList<ShoppingList>)
@@ -51,21 +53,35 @@ class DataBaseHelper(){
         referenceList.child(_id).removeValue()
     }
 
-    fun readItem(itemStatus: ItemStatus) {
-        referenceList.child(key.toString()).child("shoppingItems")
+    fun readItems(key: String, itemStatus: ItemStatus) {
+        referenceList.child(key).child("shoppingItems")
             .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                shoppingItem.clear()
+                shoppingItems.clear()
                 val post = snapshot.children
                 post.forEach {
-                    it.getValue(ShoppingItem::class.java)?.let { it1 -> shoppingItem.add(it1) }
+                    it.getValue(ShoppingItem::class.java)?.let { it1 -> shoppingItems.add(it1) }
                 }
-                itemStatus.dataIsLoaded(shoppingItem)
+                itemStatus.dataIsLoaded(shoppingItems)
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
         })
+    }
+
+    fun readItem(listKey: String, itemKey: String): ShoppingItem? {
+        referenceList.child(listKey).child("shoppingItems").child(itemKey)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val post = snapshot.getValue(ShoppingItem::class.java)
+                    shoppingItem = post
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        return shoppingItem
     }
 }
 

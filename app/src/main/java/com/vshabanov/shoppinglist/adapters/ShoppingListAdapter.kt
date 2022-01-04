@@ -38,7 +38,7 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
             clickListener.onListClick(it,list)
         }
         holder.menu?.setOnClickListener{
-            clickListener.onMenuClick(it,list,position)
+            clickListener.onMenuClick(it, list)
         }
     }
 
@@ -48,7 +48,7 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
 
     interface ClickListener {
         fun onListClick(view: View, shoppingList: ShoppingList)
-        fun onMenuClick(view: View, shoppingList: ShoppingList, position: Int)
+        fun onMenuClick(view: View, shoppingList: ShoppingList)
     }
 }
 

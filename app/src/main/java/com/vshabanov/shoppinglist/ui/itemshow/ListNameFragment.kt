@@ -4,7 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -22,9 +27,8 @@ import com.vshabanov.shoppinglist.databinding.FragmentListNameBinding
 
 class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
 
-    var items: MutableList<ShoppingItem> = arrayListOf()
     private lateinit var settings: SharedPreferences
-    private lateinit var listId: String
+    var items: MutableList<ShoppingItem> = arrayListOf()
     private lateinit var adapter: ShoppingItemAdapter
     private lateinit var listNameViewModel: ListNameViewModel
     private var _binding: FragmentListNameBinding? = null
@@ -35,7 +39,6 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settings = context?.getSharedPreferences("listId", Context.MODE_PRIVATE)!!
-        listId = settings.getString("listId","").toString()
     }
 
     override fun onCreateView(
@@ -65,7 +68,6 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        itemList(items)
         val addButton: FloatingActionButton = view.findViewById(R.id.add_product)
         //(requireActivity() as AppCompatActivity).supportActionBar?.title = args.toString()
         addButton.setOnClickListener {
@@ -79,26 +81,15 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Shopping List"
     }
 
-    override fun onItemClick(view: View,shoppingItem: ShoppingItem) {
-        TODO("Not yet implemented")
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
-    fun itemList(items: MutableList<ShoppingItem>) {
-        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-        val id: String? = Firebase.auth.currentUser?.uid
-        val referenceItem: DatabaseReference = database.getReference().child("users").child(id.toString()).child("list")
-        referenceItem.child(listId).child("shoppingItems")
-            .addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                items.clear()
-                val post = snapshot.children
-                post.forEach {
-                    it.getValue(ShoppingItem::class.java)?.let { it1 -> items.add(it1) }
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
 
+    override fun onItemClick(view: View,shoppingItem: ShoppingItem) {
+        val editor = settings.edit()
+        editor.putString("itemId",shoppingItem._id.toString())
+        editor.apply()
+        view.findNavController().navigate(R.id.editProductFragment)
     }
 }

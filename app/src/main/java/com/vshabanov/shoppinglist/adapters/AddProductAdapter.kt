@@ -1,10 +1,14 @@
 package com.vshabanov.shoppinglist.adapters
 
+import android.annotation.SuppressLint
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
@@ -31,10 +35,19 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items.get(position)
         holder.productName?.setText(item.name)
-        holder.amount?.setText(item.price)
-        holder.productName?.setOnClickListener {
-            clickListener.onItemClick(item)
-        }
+        holder.amount?.setText(item.amount)
+        holder.amount?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                clickListener.onItemClick(s.toString(), item)
+            }
+        })
     }
 
     override fun getItemCount(): Int {
@@ -42,6 +55,6 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
     }
 
     interface ClickListener {
-        fun onItemClick(shoppingItem: ShoppingItem)
+        fun onItemClick(amount: String, shoppingItem: ShoppingItem)
     }
 }

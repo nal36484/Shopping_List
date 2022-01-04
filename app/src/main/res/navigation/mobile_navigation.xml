@@ -49,14 +49,22 @@
         <argument
             android:name="name"
             android:defaultValue="Новый Список" />
+        <action
+            android:id="@+id/action_listNameFragment_to_editProductFragment"
+            app:destination="@id/editProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/product_Add_Fragment"
-        android:name="com.vshabanov.shoppinglist.AddProductFragment"
+        android:name="com.vshabanov.shoppinglist.ui.addproduct.AddProductFragment"
         android:label="fragment_add_product"
         tools:layout="@layout/fragment_add_product" >
         <argument
             android:name="name"
             android:defaultValue="Новый список" />
     </fragment>
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.vshabanov.shoppinglist.ui.editproduct.EditProductFragment"
+        android:label="fragment_edit_product"
+        tools:layout="@layout/fragment_edit_product" />
 </navigation>
