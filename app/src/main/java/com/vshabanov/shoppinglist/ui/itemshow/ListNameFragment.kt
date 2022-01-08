@@ -52,10 +52,11 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
         _binding = FragmentListNameBinding.inflate(inflater,container,false)
 
         val root: View = binding.root
+        initShoppingItemAdapter(root)
         listNameViewModel.itemsList.observe(viewLifecycleOwner,{
             view?.findViewById<RecyclerView>(R.id.recyclerViewProducts)?.adapter = ShoppingItemAdapter(it,this)
         })
-        initShoppingItemAdapter(root)
+
         return root
     }
 

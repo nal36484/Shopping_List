@@ -19,10 +19,13 @@
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/add_products.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/add_text_product.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/app_bar_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/contacts_list.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/content_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/edit_product_fragment.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_add_contact.xml" value="0.2046875" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_add_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_add_product.xml" value="0.33" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_contacts.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_edit_product.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_full_screen.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_fullscreen.xml" value="0.36666666666666664" />
@@ -31,10 +34,12 @@
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_list_name.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_login.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_registration.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_send_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_sign_in.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_slideshow.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/fragment_start.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/frame_text.xml" value="0.20364583333333333" />
+        <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/friends_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/list_add_products.xml" value="0.20520833333333333" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/list_items.xml" value="0.33" />
         <entry key="..\:/Android Shopping List/ShoppingList/app/src/main/res/layout/list_products.xml" value="0.33" />

@@ -8,7 +8,7 @@ data class ShoppingList(
     var _id: String = "",
     var name: String = "Новый список",
     var count: String = "0/0",
-    var shoppingItem: MutableList<ShoppingItem> = arrayListOf()
+    var shoppingItems: HashMap<String,ShoppingItem> = hashMapOf<String,ShoppingItem>()
 ) {
 
     @Exclude
@@ -17,7 +17,7 @@ data class ShoppingList(
            "_id" to _id,
            "name" to name,
            "count" to count,
-           "shoppingItem" to shoppingItem
+           "shoppingItem" to shoppingItems
        )
    }
 }

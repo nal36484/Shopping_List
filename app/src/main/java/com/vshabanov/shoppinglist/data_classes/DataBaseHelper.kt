@@ -1,10 +1,12 @@
 package com.vshabanov.shoppinglist.data_classes
 
+import android.app.Activity
+import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import java.util.*
+import com.vshabanov.shoppinglist.activity.MainActivity
 
 class DataBaseHelper() {
     var database: FirebaseDatabase
@@ -20,6 +22,31 @@ class DataBaseHelper() {
         referenceList = database.getReference().child("users").child(id.toString()).child("list")
     }
 
+    fun updatePhones(contacts: MutableList<Friend>) {
+        val reference = database.getReference("users")
+            reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach { val post = it.getValue(User::class.java) ?: User()
+                    contacts.forEach {
+                        if (post.phone == it.phone) {
+                            //Log.d(MainActivity.TAG, "Fail")
+                            id?.let { it1 ->
+                                database.getReference().child("phones_contacts").child(it1)
+                                    .child(post._id).child("phone")
+                                    .setValue(post.phone)
+                                    .addOnFailureListener{
+                                        Log.d(MainActivity.TAG, "Fail")
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.d(MainActivity.TAG, "Fail")
+            }
+        })
+    }
 
     interface ListStatus {
         fun dataIsLoaded(shoppingList: MutableList<ShoppingList>)
@@ -70,19 +97,20 @@ class DataBaseHelper() {
         })
     }
 
-    fun readItem(listKey: String, itemKey: String): ShoppingItem? {
-        referenceList.child(listKey).child("shoppingItems").child(itemKey)
+    /*fun readItem(listKey: String, itemKey: String): ShoppingItem? {
+        referenceList.child(listKey).child("shoppingItems")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val post = snapshot.getValue(ShoppingItem::class.java)
-                    shoppingItem = post
+                    if (snapshot.key.toString() == itemKey) {
+                        shoppingItem = snapshot.getValue(ShoppingItem::class.java)
+                    }
                 }
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
             })
         return shoppingItem
-    }
+    }*/
 }
 
 

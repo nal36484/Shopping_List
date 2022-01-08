@@ -73,7 +73,6 @@ class RegistrationFragment : Fragment() {
                         val currentUser = it.result?.user
                         val currentUserDb = reference?.child((currentUser?.uid!!))
                         currentUserDb?.child("email")?.setValue(emailAddress.text.toString())
-                        currentUserDb?.child("password")?.setValue(password.text.toString())
                         currentUserDb?.child("phone")?.setValue(phone.text.toString())
                         Toast.makeText(context,"Registration Success.",Toast.LENGTH_LONG).show()
                         startActivity(Intent(context, MainActivity::class.java))

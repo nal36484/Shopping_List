@@ -3,6 +3,7 @@ package com.vshabanov.shoppinglist.ui.home
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -14,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
 import com.vshabanov.shoppinglist.R
+import com.vshabanov.shoppinglist.activity.MainActivity
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.databinding.FragmentHomeBinding
 
@@ -25,6 +28,7 @@ class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
     private lateinit var settings: SharedPreferences
     var shoppingList: MutableList<ShoppingList> = arrayListOf()
     private lateinit var adapter: ShoppingListAdapter
+
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
     // This property is only valid between onCreateView and
@@ -47,10 +51,11 @@ class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         val root: View = binding.root
+        initShoppingListAdapter(root)
         homeViewModel.shoppingList.observe(viewLifecycleOwner,{
             view?.findViewById<RecyclerView>(R.id.recyclerViewList)?.adapter = ShoppingListAdapter(it,this)
         })
-        initShoppingListAdapter(root)
+
         return root
     }
 
@@ -75,9 +80,14 @@ class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
 
         menuPop.setOnMenuItemClickListener (PopupMenu.OnMenuItemClickListener { item:MenuItem? ->
             when (item?.itemId) {
-                R.id.action_settings -> Toast.makeText(context, "Отправлено", Toast.LENGTH_SHORT).show()
+                R.id.action_settings -> if (isAnonymous()) {
+                    Toast.makeText(context, "Необходима авторизация", Toast.LENGTH_SHORT).show()
+                } else {
+                    val action = HomeFragmentDirections.actionNavHomeToSendListFragment(shoppingList._id)
+                    view.findNavController().navigate(action)
+                }
                 R.id.save_settings -> Toast.makeText(context, "Изменить невозможно", Toast.LENGTH_SHORT).show()
-                R.id.delete_settings -> DataBaseHelper().deletePos(shoppingList._id.toString())
+                R.id.delete_settings -> DataBaseHelper().deletePos(shoppingList._id)
             }
             true
         })
@@ -91,14 +101,19 @@ class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
 
     override fun onListClick(view: View,shoppingList: ShoppingList) {
         val editor = settings.edit()
-        editor.putString("listId",shoppingList._id.toString())
+        editor.putString("listId",shoppingList._id)
         editor.apply()
 
-        val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id.toString())
+        val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id)
                 view.findNavController().navigate(action)
     }
 
     override fun onMenuClick(view: View,shoppingList: ShoppingList) {
         showMenu(view.findViewById(R.id.menu_status),shoppingList)
+    }
+
+    private fun isAnonymous(): Boolean {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        return currentUser?.isAnonymous == true
     }
 }

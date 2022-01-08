@@ -1,7 +1,7 @@
 package com.vshabanov.shoppinglist.activity
 
-import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,17 +17,18 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.EmailAuthProvider
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.R
+import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.databinding.ActivityMainBinding
-import org.w3c.dom.Text
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        val currentUser = auth.currentUser
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -52,13 +52,13 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_contacts, R.id.nav_slideshow,
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         val headerView: View = navView.getHeaderView(0)
-        val email: TextView = headerView.findViewById(R.id.userEmail)
+       /* val email: TextView = headerView.findViewById(R.id.userEmail)
         val phone: TextView = headerView.findViewById(R.id.userPhone)
         if (currentUser == null) {
             email.text = getString(R.string.nav_header_title)
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             email.text = currentUser.email
             phone.text = currentUser.displayName
-        }
+        }*/
     }
 
     override fun onStart() {
@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity() {
             signInAnonymously()
         }
     }
-
+    // delete this
     companion object {
-        private const val TAG = "AnonymousAuth"
+        const val TAG = "AnonymousAuth"
     }
 
     private fun signInAnonymously() {

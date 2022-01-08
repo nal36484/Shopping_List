@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -53,10 +54,11 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         _binding = FragmentAddProductBinding.inflate(inflater,container,false)
 
         val root: View = binding.root
+        initAddProductAdapter(root)
         addProductViewModel.itemsList.observe(viewLifecycleOwner,{
             view?.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)?.adapter = AddProductAdapter(it,this)
         })
-        initAddProductAdapter(root)
+
         return root
     }
 
@@ -80,9 +82,13 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
             else if((name != "") && (amount == "")) {
                 amount = "1"
                 writeNewPost(name, amount, listKey)
-            }
-            else
+                productName.setText("")
+                count.setText("")
+            } else {
                 writeNewPost(name, amount, listKey)
+                productName.setText("")
+                count.setText("")
+            }
         }
     }
 
@@ -107,5 +113,11 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         )
 
         reference.updateChildren(childUpdates)
+    }
+
+    override fun onStop() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0)
+        super.onStop()
     }
 }

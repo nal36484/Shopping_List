@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.databinding.FragmentGalleryBinding
 
 class GalleryFragment : Fragment() {
@@ -35,6 +34,7 @@ class GalleryFragment : Fragment() {
         galleryViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
         return root
     }
 

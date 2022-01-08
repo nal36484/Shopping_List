@@ -50,6 +50,7 @@ class AddListFragment : Fragment() {
                 writeNewPost("Новый список")
             else
                 writeNewPost(name)
+            listName.setText("")
             val action = AddListFragmentDirections.actionAddListFragmentToListNameFragment(name)
             view.findNavController().navigate(action) }
     }

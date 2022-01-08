@@ -9,13 +9,16 @@
         android:id="@+id/nav_home"
         android:name="com.vshabanov.shoppinglist.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_nav_home_to_addListFragment"
             app:destination="@id/addListFragment" />
         <action
             android:id="@+id/action_nav_home_to_listNameFragment"
             app:destination="@id/listNameFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_sendListFragment"
+            app:destination="@id/sendListFragment" />
     </fragment>
 
     <fragment
@@ -67,4 +70,28 @@
         android:name="com.vshabanov.shoppinglist.ui.editproduct.EditProductFragment"
         android:label="fragment_edit_product"
         tools:layout="@layout/fragment_edit_product" />
+    <fragment
+        android:id="@+id/nav_contacts"
+        android:name="com.vshabanov.shoppinglist.ui.contacts.ContactsFragment"
+        android:label="@string/menu_contacts"
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_nav_contacts_to_addContactFragment"
+            app:destination="@id/addContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addContactFragment"
+        android:name="com.vshabanov.shoppinglist.ui.addcontact.AddContactFragment"
+        android:label="fragment_add_contact"
+        tools:layout="@layout/fragment_add_contact" />
+    <fragment
+        android:id="@+id/sendListFragment"
+        android:name="com.vshabanov.shoppinglist.ui.sendlist.SendListFragment"
+        android:label="fragment_send_list"
+        tools:layout="@layout/fragment_send_list" >
+        <argument
+            android:name="_id"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
 </navigation>
