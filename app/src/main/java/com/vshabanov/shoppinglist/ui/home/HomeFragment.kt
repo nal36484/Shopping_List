@@ -3,27 +3,23 @@ package com.vshabanov.shoppinglist.ui.home
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
 import com.vshabanov.shoppinglist.R
-import com.vshabanov.shoppinglist.activity.MainActivity
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
+class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
 
     private lateinit var settings: SharedPreferences
     var shoppingList: MutableList<ShoppingList> = arrayListOf()
@@ -87,7 +83,7 @@ class HomeFragment : Fragment(), ShoppingListAdapter.ClickListener {
                     view.findNavController().navigate(action)
                 }
                 R.id.save_settings -> Toast.makeText(context, "Изменить невозможно", Toast.LENGTH_SHORT).show()
-                R.id.delete_settings -> DataBaseHelper().deletePos(shoppingList._id)
+                R.id.delete_settings -> DataBaseHelper().deleteList(shoppingList._id)
             }
             true
         })

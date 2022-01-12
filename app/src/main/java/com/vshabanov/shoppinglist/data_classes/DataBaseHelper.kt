@@ -1,39 +1,39 @@
 package com.vshabanov.shoppinglist.data_classes
 
-import android.app.Activity
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.activity.MainActivity
 
 class DataBaseHelper() {
-    var database: FirebaseDatabase
-    var referenceList: DatabaseReference
+
     val shoppingList: MutableList<ShoppingList> = arrayListOf()
     val shoppingItems: MutableList<ShoppingItem> = arrayListOf()
-    var id: String?
+    val friends: MutableList<Friend> = arrayListOf()
+    val messages: MutableList<Message> = arrayListOf()
+    val users: MutableList<User> = arrayListOf()
     var shoppingItem: ShoppingItem? = null
 
-    init {
-        id = Firebase.auth.currentUser?.uid
-        database = FirebaseDatabase.getInstance()
-        referenceList = database.getReference().child("users").child(id.toString()).child("list")
-    }
+    val currentId: String = Firebase.auth.currentUser?.uid.toString()
+    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val refUsers : DatabaseReference = database.reference.child("users")
+    private var refList: DatabaseReference = refUsers.child(currentId).child("list")
+    private val refFriends : DatabaseReference = refUsers.child(currentId).child("friends")
+    private val refMessages: DatabaseReference = database.reference.child("messages")
 
     fun updatePhones(contacts: MutableList<Friend>) {
-        val reference = database.getReference("users")
+        val reference = refUsers
             reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach { val post = it.getValue(User::class.java) ?: User()
-                    contacts.forEach {
-                        if (post.phone == it.phone) {
-                            //Log.d(MainActivity.TAG, "Fail")
-                            id?.let { it1 ->
-                                database.getReference().child("phones_contacts").child(it1)
-                                    .child(post._id).child("phone")
-                                    .setValue(post.phone)
+                    contacts.forEach { contact ->
+                        if (post.phone == contact.phone) {
+                            val friend = Friend(post._id, post.email, contact.name, contact.phone)
+                            currentId.let { it1 ->
+                                database.getReference().child("users").child(it1)
+                                    .child("friends").child(it.key.toString())
+                                    .setValue(friend)
                                     .addOnFailureListener{
                                         Log.d(MainActivity.TAG, "Fail")
                                     }
@@ -50,19 +50,67 @@ class DataBaseHelper() {
 
     interface ListStatus {
         fun dataIsLoaded(shoppingList: MutableList<ShoppingList>)
-        /*fun dataIsInserted()
-        fun dataIsUpdated()
-        fun dataIsDeleted()*/
     }
     interface ItemStatus {
         fun dataIsLoaded(shoppingItem: MutableList<ShoppingItem>)
-        /*fun dataIsInserted()
-        fun dataIsUpdated()
-        fun dataIsDeleted()*/
+    }
+    interface FriendStatus {
+        fun dataIsLoaded(friends: MutableList<Friend>)
+    }
+    interface MessageStatus {
+        fun dataIsLoaded(messages: MutableList<Message>)
+    }
+    interface CurrentList {
+        fun dataIsLoaded(list: ShoppingList)
+    }
+    interface UserSearch {
+        fun dataIsLoaded(users: MutableList<User>)
+    }
+
+    fun readMessages(messageStatus: MessageStatus) {
+        refMessages.child(currentId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                messages.clear()
+                val post = snapshot.children
+                post.forEach {
+                    it.getValue(Message::class.java)?.let { it1 -> messages.add(it1) }
+                }
+                messageStatus.dataIsLoaded(messages)
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
+    fun createList(userId: String, listId: String, list: CurrentList) {
+        refUsers.child(userId).child("list").child(listId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val post = snapshot.getValue(ShoppingList::class.java) ?: ShoppingList()
+                    list.dataIsLoaded(post)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+    }
+
+    fun readFriends(friendStatus : FriendStatus) {
+        refFriends.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                friends.clear()
+                val post = snapshot.children
+                post.forEach {
+                    it.getValue(Friend::class.java)?.let { it1 -> friends.add(it1) }
+                }
+                friendStatus.dataIsLoaded(friends)
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     fun readList(listStatus: ListStatus) {
-        referenceList.addValueEventListener(object : ValueEventListener {
+        refList.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 shoppingList.clear()
                 val post = snapshot.children
@@ -72,16 +120,23 @@ class DataBaseHelper() {
                 listStatus.dataIsLoaded(shoppingList)
             }
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
         })
     }
-    fun deletePos(_id: String) {
-        referenceList.child(_id).removeValue()
+    fun deleteList(_id: String) {
+        refList.child(_id).removeValue()
+    }
+
+    fun deleteItem(listId: String, itemId: String) {
+        refList.child(listId).child("shoppingItems").child(itemId).removeValue()
+    }
+
+    fun deleteMessage(_id: String) {
+        refMessages.child(currentId).child(_id).removeValue()
     }
 
     fun readItems(key: String, itemStatus: ItemStatus) {
-        referenceList.child(key).child("shoppingItems")
+        refList.child(key).child("shoppingItems")
             .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 shoppingItems.clear()
@@ -92,25 +147,54 @@ class DataBaseHelper() {
                 itemStatus.dataIsLoaded(shoppingItems)
             }
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
         })
     }
 
-    /*fun readItem(listKey: String, itemKey: String): ShoppingItem? {
-        referenceList.child(listKey).child("shoppingItems")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.key.toString() == itemKey) {
-                        shoppingItem = snapshot.getValue(ShoppingItem::class.java)
+    fun sendMessage(receivingUserId: String, listId: String) {
+        if (receivingUserId == currentId)
+            return
+
+        val refReceivingUser = "messages/$receivingUserId"
+        val messageKey = database.reference.child("messages").push().key
+
+        val mapMessage = hashMapOf<String,Any>()
+        mapMessage["_id"] = messageKey.toString()
+        mapMessage["listId"] = listId
+        mapMessage["from"] = currentId
+
+        val mapDialog = hashMapOf<String,Any>()
+        mapDialog["$refReceivingUser/$messageKey"] = mapMessage
+
+        database.reference.updateChildren(mapDialog)
+            //.addOnSuccessListener{ Log.d(MainActivity.TAG, "Success") }
+            //.addOnFailureListener { Log.d(MainActivity.TAG, "Fail") }
+    }
+
+    fun searchContact(phone: String, userSearch: UserSearch) {
+        refUsers.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                users.clear()
+                snapshot.children.forEach{
+                    if (it.child("phone").value == phone) {
+                        val post = it.getValue(User::class.java) ?: User()
+                        users.add(post)
                     }
                 }
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-        return shoppingItem
-    }*/
+                userSearch.dataIsLoaded(users)
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
+    fun friendRequest(_id: String) {
+        if (_id == currentId)
+            return
+        val refFriendsRequest = "friend_requests/$_id/$currentId"
+
+        database.reference.child(refFriendsRequest).setValue(currentId)
+    }
 }
 
 

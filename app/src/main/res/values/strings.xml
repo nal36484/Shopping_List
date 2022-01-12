@@ -50,5 +50,7 @@
     <string name="menu_contacts">Контакты</string>
     <string name="contact_helper">Введите номер контакта</string>
     <string name="country_code">+7</string>
-    <string name="phone">123 456 7890</string>
+    <string name="phone">+7 123 456 7890</string>
+    <string name="message_description">Примечание</string>
+    <string name="notifications">Входящие</string>
 </resources>

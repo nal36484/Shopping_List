@@ -10,10 +10,11 @@
             android:id="@+id/recyclerViewProducts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck"
-            tools:listitem="@layout/list_products" />
+            tools:listitem="@layout/recycler_view_list_products" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_product"

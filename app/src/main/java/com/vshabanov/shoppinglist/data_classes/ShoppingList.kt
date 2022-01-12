@@ -17,7 +17,7 @@ data class ShoppingList(
            "_id" to _id,
            "name" to name,
            "count" to count,
-           "shoppingItem" to shoppingItems
+           "shoppingItems" to shoppingItems
        )
    }
 }

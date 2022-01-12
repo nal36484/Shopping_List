@@ -26,14 +26,14 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_items,parent,false)
+            .inflate(R.layout.recycler_view_list_items,parent,false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val list = shoppingList.get(position)
-        holder.nameList?.setText(list.name)
-        holder.count?.setText(list.count)
+        val list = shoppingList[position]
+        holder.nameList?.text = list.name
+        holder.count?.text = list.count
         holder.nameList?.setOnClickListener {
             clickListener.onListClick(it,list)
         }

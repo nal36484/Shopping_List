@@ -10,10 +10,19 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.R
+import com.vshabanov.shoppinglist.adapters.SearchContactAdapter
+import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
+import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
+import com.vshabanov.shoppinglist.data_classes.User
 import com.vshabanov.shoppinglist.databinding.FragmentAddContactBinding
 
-class AddContactFragment : Fragment() {
+class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
+
+    var users: MutableList<User> = arrayListOf()
+    private lateinit var adapter: SearchContactAdapter
 
     private lateinit var addContactViewModel: AddContactViewModel
     private var _binding: FragmentAddContactBinding? = null
@@ -35,16 +44,34 @@ class AddContactFragment : Fragment() {
 
         _binding = FragmentAddContactBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        initSearchContactAdapter(root)
 
         return root
     }
 
+    private fun initSearchContactAdapter(view: View) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewSearchResult)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = SearchContactAdapter(users, this)
+        recyclerView.adapter = adapter
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val code: EditText = view.findViewById(R.id.countryCode)
         val number: EditText = view.findViewById(R.id.phoneNumber)
         val search: ImageButton = view.findViewById(R.id.searchContact)
         search.setOnClickListener {
+            val phone = number.text.toString()
+            if (phone == "") {
+                return@setOnClickListener
+            } else {
+                DataBaseHelper().searchContact(phone, object : DataBaseHelper.UserSearch {
+                    override fun dataIsLoaded(users: MutableList<User>) {
+                        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewSearchResult)
+                        recyclerView.adapter = SearchContactAdapter(users, this@AddContactFragment)
+                    }
+                })
+            }
         }
     }
 
@@ -59,5 +86,7 @@ class AddContactFragment : Fragment() {
         _binding = null
     }
 
-
+    override fun onAddClick(view: View, _id: String) {
+        DataBaseHelper().friendRequest(_id)
+    }
 }

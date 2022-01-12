@@ -79,7 +79,7 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
 
     override fun onStop() {
         super.onStop()
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Shopping List"
+        //(requireActivity() as AppCompatActivity).supportActionBar?.title = "Shopping List"
     }
 
     override fun onDestroyView() {

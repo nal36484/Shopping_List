@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.adapters.AddProductAdapter
+import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.databinding.FragmentAddProductBinding
 
@@ -100,6 +101,11 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
             }
         }
     }
+
+    override fun onNameClick(view: View, shoppingItem: ShoppingItem) {
+        listKey?.let { DataBaseHelper().deleteItem(it,shoppingItem._id) }
+    }
+
     private fun writeNewPost(name: String, amount: String, _id: String?) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously

@@ -22,17 +22,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.vshabanov.shoppinglist.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.vshabanov.shoppinglist.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-    <fragment
         android:id="@+id/addListFragment"
         android:name="com.vshabanov.shoppinglist.ui.addlist.AddListFragment"
         android:label="fragment_add_list"
@@ -90,8 +79,16 @@
         android:label="fragment_send_list"
         tools:layout="@layout/fragment_send_list" >
         <argument
-            android:name="_id"
+            android:name="listId"
             app:argType="string"
             android:defaultValue='""' />
+        <action
+            android:id="@+id/action_sendListFragment_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.vshabanov.shoppinglist.ui.notifications.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications" />
 </navigation>

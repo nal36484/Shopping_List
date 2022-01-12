@@ -10,51 +10,47 @@
         android:id="@+id/contactHelper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="124dp"
         android:layout_marginTop="70dp"
         android:textSize="18sp"
         android:text="@string/contact_helper"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/countryCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:ems="4"
-        android:hint="@string/country_code"
-        android:inputType="phone"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contactHelper" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="@string/phone"
         android:inputType="phone"
         android:minHeight="48dp"
-        app:layout_constraintStart_toEndOf="@+id/countryCode"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/searchContact"
         app:layout_constraintTop_toBottomOf="@+id/contactHelper" />
 
     <ImageButton
         android:id="@+id/searchContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="@color/design_default_color_secondary"
         android:minHeight="48dp"
         android:src="@drawable/ic_search_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/phoneNumber"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/phoneNumber"
-        app:layout_constraintTop_toTopOf="@+id/phoneNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/contactHelper"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSearchResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumber"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/recycler_view_search_result" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

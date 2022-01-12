@@ -4,16 +4,20 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
 
 class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clickListener: ClickListener):
     RecyclerView.Adapter<ShoppingItemAdapter.MyViewHolder>() {
+
+    private val checkedState: MutableList<Boolean> = arrayListOf()
+
+    init {
+        for (i in items)
+            checkedState.add(false)
+    }
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var productName: CheckBox? = null
@@ -33,19 +37,23 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_products,parent,false)
+            .inflate(R.layout.recycler_view_list_products,parent,false)
         return MyViewHolder(itemView)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items.get(position)
-        holder.productName?.setText(item.name)
-        holder.amount?.setText(item.amount)
-        holder.textPrice?.setText(item.price.toString()+"₽")
+        holder.productName?.text = item.name
+        holder.amount?.text = item.amount
+        holder.textPrice?.text = item.price.toString()+"₽"
         holder.editPrice?.setText(item.price.toString())
         holder.amount?.setOnClickListener {
             clickListener.onItemClick(it, item)
+        }
+        holder.productName?.isChecked = checkedState[position]
+        holder.productName?.setOnClickListener {
+            checkedState[position] = !checkedState[position]
         }
     }
 
@@ -55,5 +63,8 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
 
     interface ClickListener {
         fun onItemClick(view: View,shoppingItem: ShoppingItem)
+    }
+    fun getChecked():MutableList<Boolean> {
+        return checkedState
     }
 }

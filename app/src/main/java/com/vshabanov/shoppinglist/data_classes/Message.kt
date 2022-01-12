@@ -4,20 +4,20 @@ import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class Friend(
+data class Message(
     var _id: String = "",
-    var email: String = "",
-    var name: String = "",
-    var phone: String = ""
+    var from: String = "",
+    var listId: String = "",
+    var nameFrom: String = "",
+    var phoneFrom: String = ""
 ) {
 
     @Exclude
     fun toMap(): Map<String,Any?> {
         return mapOf(
             "_id" to _id,
-            "email" to email,
-            "name" to name,
-            "phone" to phone
+            "from" to from,
+            "listId" to listId
         )
     }
 }

@@ -1,6 +1,5 @@
 package com.vshabanov.shoppinglist.adapters
 
-import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -8,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
@@ -28,13 +26,13 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_add_products,parent,false)
+            .inflate(R.layout.recycler_view_list_add_products,parent,false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items.get(position)
-        holder.productName?.setText(item.name)
+        holder.productName?.text = item.name
         holder.amount?.setText(item.amount)
         holder.amount?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -48,6 +46,9 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
                 clickListener.onItemClick(s.toString(), item)
             }
         })
+        holder.productName?.setOnClickListener {
+            clickListener.onNameClick(it, item)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -56,5 +57,6 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
 
     interface ClickListener {
         fun onItemClick(amount: String, shoppingItem: ShoppingItem)
+        fun onNameClick(view: View,shoppingItem: ShoppingItem)
     }
 }

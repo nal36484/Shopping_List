@@ -22,7 +22,7 @@ import com.vshabanov.shoppinglist.adapters.ContactsAdapter
 import com.vshabanov.shoppinglist.data_classes.Friend
 import com.vshabanov.shoppinglist.databinding.FragmentContactsBinding
 
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), ContactsAdapter.ClickListener {
 
     var friends: MutableList<Friend> = arrayListOf()
     private lateinit var adapter: ContactsAdapter
@@ -50,7 +50,7 @@ class ContactsFragment : Fragment() {
         val root: View = binding.root
         initContactsAdapter(root)
         contactsViewModel.friends.observe(viewLifecycleOwner, {
-            view?.findViewById<RecyclerView>(R.id.recyclerViewContacts)?.adapter = ContactsAdapter(it)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewContacts)?.adapter = ContactsAdapter(it, this)
         })
 
         return root
@@ -59,7 +59,7 @@ class ContactsFragment : Fragment() {
     private fun initContactsAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ContactsAdapter(friends)
+        adapter = ContactsAdapter(friends, this)
         recyclerView.adapter = adapter
     }
 
@@ -95,4 +95,9 @@ class ContactsFragment : Fragment() {
         }
     }
 
+    override fun ItemCheked(view: View, _id: String) {
+    }
+
+    override fun ItemUnCheked(view: View, _id: String) {
+    }
 }

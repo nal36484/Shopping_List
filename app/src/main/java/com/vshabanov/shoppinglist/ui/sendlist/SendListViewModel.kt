@@ -4,13 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.Friend
+import com.vshabanov.shoppinglist.data_classes.ShoppingList
 
 class SendListViewModel(application: Application): AndroidViewModel(application) {
 
-    val _friends = MutableLiveData<MutableList<Friend>>().apply {
-        value = arrayListOf()
-    }
+    private val _friends = MutableLiveData<MutableList<Friend>>()
+
+    val data = DataBaseHelper().readFriends(object : DataBaseHelper.FriendStatus {
+        override fun dataIsLoaded(friends: MutableList<Friend>) {
+            _friends.value = friends
+        }
+    })
 
     val friends: LiveData<MutableList<Friend>> = _friends
 }

@@ -20,7 +20,7 @@ import com.vshabanov.shoppinglist.data_classes.ShoppingList
 
 class AddListFragment : Fragment() {
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    var reference: DatabaseReference = database.getReference().child("users")
+    var reference: DatabaseReference = database.reference.child("users")
     val auth = Firebase.auth
 
     private lateinit var settings: SharedPreferences
