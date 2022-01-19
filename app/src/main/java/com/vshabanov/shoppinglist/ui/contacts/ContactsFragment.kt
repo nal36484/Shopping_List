@@ -19,13 +19,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.adapters.ContactsAdapter
+import com.vshabanov.shoppinglist.adapters.FriendsAdapter
 import com.vshabanov.shoppinglist.data_classes.Friend
 import com.vshabanov.shoppinglist.databinding.FragmentContactsBinding
 
-class ContactsFragment : Fragment(), ContactsAdapter.ClickListener {
+class ContactsFragment : Fragment() {
 
     var friends: MutableList<Friend> = arrayListOf()
-    private lateinit var adapter: ContactsAdapter
+    private lateinit var adapter: FriendsAdapter
     var request: Int = 1
 
     private lateinit var contactsViewModel: ContactsViewModel
@@ -50,7 +51,7 @@ class ContactsFragment : Fragment(), ContactsAdapter.ClickListener {
         val root: View = binding.root
         initContactsAdapter(root)
         contactsViewModel.friends.observe(viewLifecycleOwner, {
-            view?.findViewById<RecyclerView>(R.id.recyclerViewContacts)?.adapter = ContactsAdapter(it, this)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewContacts)?.adapter = FriendsAdapter(it)
         })
 
         return root
@@ -59,7 +60,7 @@ class ContactsFragment : Fragment(), ContactsAdapter.ClickListener {
     private fun initContactsAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ContactsAdapter(friends, this)
+        adapter = FriendsAdapter(friends)
         recyclerView.adapter = adapter
     }
 
@@ -93,11 +94,5 @@ class ContactsFragment : Fragment(), ContactsAdapter.ClickListener {
         } else {
             Toast.makeText(context, "Доступ к контактам отклонён", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun ItemCheked(view: View, _id: String) {
-    }
-
-    override fun ItemUnCheked(view: View, _id: String) {
     }
 }

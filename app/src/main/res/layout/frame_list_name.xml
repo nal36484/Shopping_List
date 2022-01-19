@@ -4,20 +4,24 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewPrice"
+        android:id="@+id/textViewListName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text=""
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:textSize="18sp"
-        android:gravity="center" />
+        android:gravity="center_vertical" />
 
     <EditText
-        android:id="@+id/editTextPrice"
+        android:id="@+id/editTextListName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:textSize="18sp"
-        android:gravity="center"
-        android:inputType="number"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         android:visibility="gone"/>
 
 </FrameLayout>

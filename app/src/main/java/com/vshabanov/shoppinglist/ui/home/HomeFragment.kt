@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
 import com.vshabanov.shoppinglist.R
@@ -20,6 +28,11 @@ import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.databinding.FragmentHomeBinding
 
 class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
+
+    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    var id: String? = Firebase.auth.currentUser?.uid
+    var referenceList: DatabaseReference =
+        database.reference.child("users").child(id.toString()).child("list")
 
     private lateinit var settings: SharedPreferences
     var shoppingList: MutableList<ShoppingList> = arrayListOf()
@@ -104,12 +117,39 @@ class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
                 view.findNavController().navigate(action)
     }
 
-    override fun onMenuClick(view: View,shoppingList: ShoppingList) {
-        showMenu(view.findViewById(R.id.menu_status),shoppingList)
+    override fun onMenuClick(view: View, shoppingList: ShoppingList) {
+        showMenu(view.findViewById(R.id.menu_status), shoppingList)
     }
 
     private fun isAnonymous(): Boolean {
         val currentUser = FirebaseAuth.getInstance().currentUser
         return currentUser?.isAnonymous == true
     }
+
+    /*private fun changeListName(view: View, shoppingList: ShoppingList) {
+        val textView = view.findViewById<TextView>(R.id.textViewListName)
+        val editText = view.findViewById<EditText>(R.id.editTextListName)
+        textView.visibility = View.GONE
+        editText.visibility = View.VISIBLE
+        editText.setSelectAllOnFocus(true)
+        editText.requestFocus()
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        editText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    var name = editText.text.toString()
+                    if (name == "")
+                        name = "Новый Список"
+                    referenceList.child(shoppingList._id).child("name").setValue(name)
+                    if (name == shoppingList.name) {
+                        textView.visibility = View.VISIBLE
+                        editText.visibility = View.GONE
+                    }
+                    return true
+                }
+                return false
+            }
+        })
+    }*/
 }

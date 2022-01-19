@@ -86,7 +86,7 @@ class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
         _binding = null
     }
 
-    override fun onAddClick(view: View, _id: String) {
-        DataBaseHelper().friendRequest(_id)
+    override fun onAddClick(view: View, user: User) {
+        DataBaseHelper().friendRequest(user)
     }
 }

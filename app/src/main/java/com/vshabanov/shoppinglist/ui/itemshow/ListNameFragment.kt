@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +29,12 @@ import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.databinding.FragmentListNameBinding
 
 class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
+
+    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    var id: String? = Firebase.auth.currentUser?.uid
+    var referenceList: DatabaseReference =
+        database.reference.child("users").child(id.toString()).child("list")
+
 
     private lateinit var settings: SharedPreferences
     var items: MutableList<ShoppingItem> = arrayListOf()
@@ -60,7 +69,7 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
         return root
     }
 
-    fun initShoppingItemAdapter(view: View) {
+    private fun initShoppingItemAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = ShoppingItemAdapter(items,this)
@@ -79,7 +88,23 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
 
     override fun onStop() {
         super.onStop()
-        //(requireActivity() as AppCompatActivity).supportActionBar?.title = "Shopping List"
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        var itemCount = 0
+        var statusCount = 0
+        listNameViewModel.itemsList.observe(viewLifecycleOwner, {
+            itemCount = it.size
+            it.forEach {
+                if (it.status == "true")
+                    statusCount++
+            }
+        })
+        referenceList.child(listNameViewModel.listId).child("count")
+            .setValue("$statusCount/$itemCount")
     }
 
     override fun onDestroyView() {
@@ -93,4 +118,44 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
         editor.apply()
         view.findNavController().navigate(R.id.editProductFragment)
     }
+
+    override fun onPriceClick(view: View, shoppingItem: ShoppingItem) {
+        val textView = view.findViewById<TextView>(R.id.textViewPrice)
+        val editText = view.findViewById<EditText>(R.id.editTextPrice)
+        textView.visibility = View.GONE
+        editText.visibility = View.VISIBLE
+        editText.setSelectAllOnFocus(true)
+        editText.requestFocus()
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        editText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    var price = editText.text.toString()
+                    if (price == "")
+                        price = "0"
+                    referenceList.child(listNameViewModel.listId).child("shoppingItems")
+                        .child(shoppingItem._id).child("price").setValue(price)
+                    if (price == shoppingItem.price) {
+                        textView.visibility = View.VISIBLE
+                        editText.visibility = View.GONE
+                    }
+                    return true
+                }
+                return false
+            }
+        })
+    }
+
+    override fun onChecked(view: View, shoppingItem: ShoppingItem) {
+        val status =
+            if (shoppingItem.status == "false") {
+            "true"
+            } else {
+                "false"
+            }
+        referenceList.child(listNameViewModel.listId).child("shoppingItems")
+            .child(shoppingItem._id).child("status").setValue(status)
+    }
 }
+

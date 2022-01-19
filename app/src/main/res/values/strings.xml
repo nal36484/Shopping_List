@@ -53,4 +53,13 @@
     <string name="phone">+7 123 456 7890</string>
     <string name="message_description">Примечание</string>
     <string name="notifications">Входящие</string>
+    <string name="friendRequest">Запросы</string>
+    <string name="exit">Выход</string>
+    <string name="authorization">ВОЙТИ ИЛИ\nЗАРЕГИСТРИРОВАТЬСЯ</string>
+    <string name="info">Вы не авторизованы</string>
+    <string name="userName">Имя Пользователя</string>
+    <string name="save_state">Сохранить Изменения</string>
+    <string name="shoppingList">Список покупок</string>
+    <string name="requests">Запросы в друзья</string>
+    <string name="settings">Настройки</string>
 </resources>

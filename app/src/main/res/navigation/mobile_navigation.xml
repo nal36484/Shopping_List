@@ -19,12 +19,15 @@
         <action
             android:id="@+id/action_nav_home_to_sendListFragment"
             app:destination="@id/sendListFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/addListFragment"
         android:name="com.vshabanov.shoppinglist.ui.addlist.AddListFragment"
-        android:label="fragment_add_list"
+        android:label="@string/shoppingList"
         tools:layout="@layout/fragment_add_list" >
         <action
             android:id="@+id/action_addListFragment_to_listNameFragment"
@@ -33,7 +36,7 @@
     <fragment
         android:id="@+id/listNameFragment"
         android:name="com.vshabanov.shoppinglist.ui.itemshow.ListNameFragment"
-        android:label="fragment_list_name"
+        android:label="@string/shoppingList"
         tools:layout="@layout/fragment_list_name" >
         <action
             android:id="@+id/action_listNameFragment_to_product_Add_Fragment"
@@ -48,7 +51,7 @@
     <fragment
         android:id="@+id/product_Add_Fragment"
         android:name="com.vshabanov.shoppinglist.ui.addproduct.AddProductFragment"
-        android:label="fragment_add_product"
+        android:label="@string/shoppingList"
         tools:layout="@layout/fragment_add_product" >
         <argument
             android:name="name"
@@ -57,7 +60,7 @@
     <fragment
         android:id="@+id/editProductFragment"
         android:name="com.vshabanov.shoppinglist.ui.editproduct.EditProductFragment"
-        android:label="fragment_edit_product"
+        android:label="@string/shoppingList"
         tools:layout="@layout/fragment_edit_product" />
     <fragment
         android:id="@+id/nav_contacts"
@@ -71,12 +74,12 @@
     <fragment
         android:id="@+id/addContactFragment"
         android:name="com.vshabanov.shoppinglist.ui.addcontact.AddContactFragment"
-        android:label="fragment_add_contact"
+        android:label="@string/menu_contacts"
         tools:layout="@layout/fragment_add_contact" />
     <fragment
         android:id="@+id/sendListFragment"
         android:name="com.vshabanov.shoppinglist.ui.sendlist.SendListFragment"
-        android:label="fragment_send_list"
+        android:label="@string/shoppingList"
         tools:layout="@layout/fragment_send_list" >
         <argument
             android:name="listId"
@@ -89,6 +92,21 @@
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.vshabanov.shoppinglist.ui.notifications.NotificationsFragment"
-        android:label="fragment_notifications"
+        android:label="@string/notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/friendRequestFragment"
+        android:name="com.vshabanov.shoppinglist.ui.friendrequest.FriendRequestFragment"
+        android:label="@string/requests"
+        tools:layout="@layout/fragment_friend_request" />
+    <fragment
+        android:id="@+id/logOutFragment"
+        android:name="com.vshabanov.shoppinglist.ui.exit.LogOutFragment"
+        android:label="@string/shoppingList"
+        tools:layout="@layout/fragment_log_out" />
+    <fragment
+        android:id="@+id/userInfoFragment"
+        android:name="com.vshabanov.shoppinglist.ui.userinfo.UserInfoFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_user_info" />
 </navigation>

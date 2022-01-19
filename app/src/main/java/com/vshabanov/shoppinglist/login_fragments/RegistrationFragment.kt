@@ -35,6 +35,7 @@ class RegistrationFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
         reference = database?.reference?.child("users")
+
     }
 
     override fun onCreateView(
@@ -55,15 +56,18 @@ class RegistrationFragment : Fragment() {
     }
 
     private fun registration() {
+        val emailVerification = Regex("""^[\w%-+.]{2,}+@+[\w-]{2,}+\.+(\w{2,6})""")
+        val phoneVerification = Regex("""^(\+\d|\d)+\d{10}""")
+        val passwordVerification = Regex("""[\w!@#${'$'}%^&*]{6,}""")
         registration.setOnClickListener {
-            if (TextUtils.isEmpty(emailAddress.text.toString())) {
-                emailAddress.setError("Please enter email address")
+            if (!emailAddress.text.toString().matches(emailVerification)) {
+                emailAddress.error = "incorrect email address"
                 return@setOnClickListener
-            } else if(TextUtils.isEmpty(password.text.toString())) {
-                password.setError("Please enter password")
+            } else if(!password.text.toString().matches(passwordVerification)) {
+                password.error = "The minimum password length must be at least 6 characters "
                 return@setOnClickListener
-            } else if(TextUtils.isEmpty(phone.text.toString())) {
-                phone.setError("Please enter phone number")
+            } else if(!phone.text.toString().matches(phoneVerification)) {
+                phone.error = "incorrect phone number, for example +71234567890"
                 return@setOnClickListener
             }
             val credential = EmailAuthProvider.getCredential(emailAddress.text.toString(),password.text.toString())
@@ -75,6 +79,7 @@ class RegistrationFragment : Fragment() {
                         currentUserDb?.child("email")?.setValue(emailAddress.text.toString())
                         currentUserDb?.child("phone")?.setValue(phone.text.toString())
                         currentUserDb?.child("_id")?.setValue(currentUser?.uid)
+                        currentUserDb?.child("name")?.setValue(emailAddress.text.toString())
                         Toast.makeText(context,"Registration Success.",Toast.LENGTH_LONG).show()
                         startActivity(Intent(context, MainActivity::class.java))
                     } else {

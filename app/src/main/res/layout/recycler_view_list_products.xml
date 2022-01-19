@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/border"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp" >
 
     <CheckBox
         android:id="@+id/product"
@@ -16,7 +17,7 @@
         android:paddingEnd="10dp"
         android:gravity="center_vertical"
         android:textSize="18sp"
-        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/productCount"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,18 +31,33 @@
         android:textSize="18sp"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/product"
-        app:layout_constraintEnd_toStartOf="@+id/productPrice"
+        app:layout_constraintEnd_toStartOf="@+id/productUnits"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        android:id="@+id/productPrice"
-        layout="@layout/frame_text"
+    <TextView
+        android:id="@+id/productUnits"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHeight_min="48dp"
-        app:layout_constraintHorizontal_weight="1"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@+id/productCount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/productPrice"
+        />
+
+   <include
+       android:id="@+id/productPrice"
+       layout="@layout/frame_item_price"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:textSize="18sp"
+       android:gravity="center"
+       app:layout_constraintHeight_min="48dp"
+       app:layout_constraintHorizontal_weight="1"
+       app:layout_constraintStart_toEndOf="@+id/productUnits"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

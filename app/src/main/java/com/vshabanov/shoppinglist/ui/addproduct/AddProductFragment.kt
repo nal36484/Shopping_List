@@ -2,13 +2,10 @@ package com.vshabanov.shoppinglist.ui.addproduct
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +23,7 @@ import com.vshabanov.shoppinglist.databinding.FragmentAddProductBinding
 class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    var reference: DatabaseReference = database.getReference().child("users")
+    var reference: DatabaseReference = database.reference.child("users")
     val auth = Firebase.auth
     var listKey: String? = null
 
@@ -57,7 +54,8 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         val root: View = binding.root
         initAddProductAdapter(root)
         addProductViewModel.itemsList.observe(viewLifecycleOwner,{
-            view?.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)?.adapter = AddProductAdapter(it,this)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)?.adapter =
+                AddProductAdapter(it, requireContext(),this)
         })
 
         return root
@@ -66,7 +64,7 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
     fun initAddProductAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AddProductAdapter(items,this)
+        adapter = AddProductAdapter(items, requireContext(),this)
         recyclerView.adapter = adapter
     }
 
@@ -93,17 +91,25 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         }
     }
 
-    override fun onItemClick(amount: String, shoppingItem: ShoppingItem) {
+    /*override fun onItemClick(amount: String, shoppingItem: ShoppingItem) {
         auth.currentUser?.uid?.let {
             listKey?.let { it1 ->
                 reference.child(it).child("list").child(it1)
                     .child("shoppingItems").child(shoppingItem._id).child("amount").setValue(amount)
             }
         }
+    }*/
+
+    override fun onDeleteClick(view: View, shoppingItem: ShoppingItem) {
+        listKey?.let { DataBaseHelper().deleteItem(it,shoppingItem._id) }
     }
 
-    override fun onNameClick(view: View, shoppingItem: ShoppingItem) {
-        listKey?.let { DataBaseHelper().deleteItem(it,shoppingItem._id) }
+    override fun onSpinnerClick(view: View, position: Int, _id: String) {
+        val userId = auth.currentUser?.uid.toString()
+        listKey?.let {
+            reference.child(userId).child("list").child(it).child("shoppingItems")
+                .child(_id).child("units").setValue(position.toString())
+        }
     }
 
     private fun writeNewPost(name: String, amount: String, _id: String?) {
@@ -113,7 +119,6 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         val userId = auth.currentUser?.uid
         val post = ShoppingItem(key,name, amount)
         val postValues = post.toMap()
-
         val childUpdates = hashMapOf<String, Any>(
             "$userId/list/$_id/shoppingItems/$key" to postValues,
         )
@@ -123,7 +128,7 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
 
     override fun onStop() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0)
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         super.onStop()
     }
 }

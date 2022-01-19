@@ -14,10 +14,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.R
-import com.vshabanov.shoppinglist.adapters.ContactsAdapter
 import com.vshabanov.shoppinglist.adapters.NotificationsAdapter
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
-import com.vshabanov.shoppinglist.data_classes.Friend
 import com.vshabanov.shoppinglist.data_classes.Message
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.databinding.FragmentNotificationsBinding
@@ -86,15 +84,10 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.ClickListener {
     }
 
     private fun writeNewPost(shoppingList: ShoppingList) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        val key = reference.push().key.toString()
         val userId = auth.currentUser?.uid
-        val post = shoppingList
-        post._id = key
-        val postValues = post.toMap()
+        val postValues = shoppingList.toMap()
         val childUpdates = hashMapOf<String, Any>(
-            "$userId/list/$key" to postValues,
+            "$userId/list/${shoppingList._id}" to postValues,
         )
         reference.updateChildren(childUpdates)
     }

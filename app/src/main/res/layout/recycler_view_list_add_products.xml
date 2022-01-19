@@ -7,6 +7,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageButton
+        android:id="@+id/productDelete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        app:layout_constraintHeight_min="48dp"
+        app:srcCompat="@drawable/ic_action_decline"
+        app:layout_constraintHorizontal_weight="0.75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/productName" />
+
     <TextView
         android:id="@+id/productName"
         android:layout_width="0dp"
@@ -16,24 +28,32 @@
         android:gravity="center_vertical"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        app:layout_constraintHorizontal_weight="5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toEndOf="@+id/productDelete"
         app:layout_constraintEnd_toStartOf="@+id/productAmount"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <EditText
+    <TextView
         android:id="@+id/productAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHeight_min="48dp"
-        android:inputType="number"
-        android:hint="@string/amount"
         android:textSize="18sp"
-        android:gravity="center_horizontal"
-        app:layout_constraintHorizontal_weight="1"
+        android:gravity="center_vertical"
+        app:layout_constraintHorizontal_weight="0.75"
         app:layout_constraintStart_toEndOf="@+id/productName"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerSelectUnits"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinnerSelectUnits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="18sp"
+        app:layout_constraintHeight_min="48dp"
+        app:layout_constraintStart_toEndOf="@+id/productAmount"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

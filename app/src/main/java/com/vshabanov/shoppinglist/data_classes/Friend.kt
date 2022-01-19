@@ -8,7 +8,8 @@ data class Friend(
     var _id: String = "",
     var email: String = "",
     var name: String = "",
-    var phone: String = ""
+    var phone: String = "",
+    var photo: String = "empty"
 ) {
 
     @Exclude

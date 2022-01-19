@@ -9,6 +9,8 @@ data class ShoppingItem(
     var name: String = "",
     var amount: String = "1",
     var price: String = "0",
+    var units: String = "0",
+    var status: String = "false"
     //var shopName: String?
 ) {
 
@@ -18,7 +20,9 @@ data class ShoppingItem(
             "_id" to _id,
             "name" to name,
             "amount" to amount,
-            "price" to price
+            "price" to price,
+            "units" to units,
+            "status" to status
         )
     }
 }

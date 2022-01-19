@@ -18,9 +18,11 @@ import com.vshabanov.shoppinglist.databinding.FragmentEditProductBinding
 
 class EditProductFragment : Fragment() {
 
-    var database: FirebaseDatabase
-    var referenceList: DatabaseReference
-    var id: String?
+    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    var id: String? = Firebase.auth.currentUser?.uid
+    var referenceList: DatabaseReference =
+        database.reference.child("users").child(id.toString()).child("list")
+
 
     private lateinit var editProductViewModel: EditProductViewModel
     private var _binding: FragmentEditProductBinding? = null
@@ -28,12 +30,6 @@ class EditProductFragment : Fragment() {
     var itemName: EditText? = null
     var itemAmount: EditText? = null
     var itemPrice: EditText? = null
-
-    init {
-        id = Firebase.auth.currentUser?.uid
-        database = FirebaseDatabase.getInstance()
-        referenceList = database.getReference().child("users").child(id.toString()).child("list")
-    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.

@@ -25,6 +25,7 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
         var price: FrameLayout? = null
         var textPrice: TextView? = null
         var editPrice: EditText? = null
+        var units: TextView? = null
 
         init {
             productName = itemView.findViewById(R.id.product)
@@ -32,6 +33,7 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
             price = itemView.findViewById(R.id.productPrice)
             textPrice = itemView.findViewById(R.id.textViewPrice)
             editPrice = itemView.findViewById(R.id.editTextPrice)
+            units = itemView.findViewById(R.id.productUnits)
         }
     }
 
@@ -43,18 +45,29 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val item = items.get(position)
+        val item = items[position]
         holder.productName?.text = item.name
         holder.amount?.text = item.amount
-        holder.textPrice?.text = item.price.toString()+"₽"
-        holder.editPrice?.setText(item.price.toString())
+        holder.textPrice?.text = item.price + "₽"
+        holder.editPrice?.setText(item.price)
         holder.amount?.setOnClickListener {
             clickListener.onItemClick(it, item)
         }
-        holder.productName?.isChecked = checkedState[position]
+        holder.productName?.isChecked = item.status.toBoolean()
         holder.productName?.setOnClickListener {
-            checkedState[position] = !checkedState[position]
+            clickListener.onChecked(it, item)
         }
+        holder.price?.setOnClickListener {
+            clickListener.onPriceClick(it, item)
+        }
+        holder.units?.text = when (item.units) {
+            "0" -> "шт"
+            "1" -> "л"
+            "2" -> "кг"
+            "3" -> "г"
+            else -> "шт"
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -62,7 +75,9 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
     }
 
     interface ClickListener {
-        fun onItemClick(view: View,shoppingItem: ShoppingItem)
+        fun onItemClick(view: View, shoppingItem: ShoppingItem)
+        fun onPriceClick(view: View, shoppingItem: ShoppingItem)
+        fun onChecked(view: View, shoppingItem: ShoppingItem)
     }
     fun getChecked():MutableList<Boolean> {
         return checkedState

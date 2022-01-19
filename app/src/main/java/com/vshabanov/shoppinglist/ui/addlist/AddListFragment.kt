@@ -57,7 +57,7 @@ class AddListFragment : Fragment() {
 
     override fun onStop() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0)
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         super.onStop()
     }
 

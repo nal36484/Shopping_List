@@ -40,7 +40,7 @@ class ContactsAdapter(var friends: MutableList<Friend>, private val clickListene
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val friend = friends.get(position)
+        val friend = friends[position]
         holder.friendName?.text = friend.name
         holder.friendPhone?.text = friend.phone
         holder.checkBox?.isChecked = checkedState[position]

@@ -35,7 +35,6 @@ class NotificationsAdapter(var messages: MutableList<Message>,private val clickL
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val message = messages[position]
         holder.from?.text = ("Вам пришёл список, отправитель ${message.nameFrom}")
-        //holder.description?.text = message._id
         holder.accept?.setOnClickListener {
             clickListener.onAcceptClick(it, message)
         }

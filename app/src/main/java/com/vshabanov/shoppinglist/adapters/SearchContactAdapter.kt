@@ -35,7 +35,7 @@ class SearchContactAdapter(var users: MutableList<User>, private val clickListen
         holder.phone?.text = user.phone
         holder.email?.text = user.email
         holder.add?.setOnClickListener {
-            clickListener.onAddClick(it, user._id)
+            clickListener.onAddClick(it, user)
         }
     }
 
@@ -44,6 +44,6 @@ class SearchContactAdapter(var users: MutableList<User>, private val clickListen
     }
 
     interface ClickListener {
-        fun onAddClick(view: View, _id: String)
+        fun onAddClick(view: View, user: User)
     }
 }

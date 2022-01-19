@@ -13,7 +13,7 @@ class DataBaseHelper() {
     val friends: MutableList<Friend> = arrayListOf()
     val messages: MutableList<Message> = arrayListOf()
     val users: MutableList<User> = arrayListOf()
-    var shoppingItem: ShoppingItem? = null
+    val requests: MutableList<Friend> = arrayListOf()
 
     val currentId: String = Firebase.auth.currentUser?.uid.toString()
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -21,6 +21,7 @@ class DataBaseHelper() {
     private var refList: DatabaseReference = refUsers.child(currentId).child("list")
     private val refFriends : DatabaseReference = refUsers.child(currentId).child("friends")
     private val refMessages: DatabaseReference = database.reference.child("messages")
+    private val refFriendRequests: DatabaseReference = database.reference.child("friend_requests")
 
     fun updatePhones(contacts: MutableList<Friend>) {
         val reference = refUsers
@@ -29,7 +30,8 @@ class DataBaseHelper() {
                 snapshot.children.forEach { val post = it.getValue(User::class.java) ?: User()
                     contacts.forEach { contact ->
                         if (post.phone == contact.phone) {
-                            val friend = Friend(post._id, post.email, contact.name, contact.phone)
+                            val friend =
+                                Friend(post._id, post.email, contact.name, contact.phone, post.photo)
                             currentId.let { it1 ->
                                 database.getReference().child("users").child(it1)
                                     .child("friends").child(it.key.toString())
@@ -65,6 +67,38 @@ class DataBaseHelper() {
     }
     interface UserSearch {
         fun dataIsLoaded(users: MutableList<User>)
+    }
+    interface FriendRequests {
+        fun dataIsLoaded(requests: MutableList<Friend>)
+    }
+    interface CurrentUserData {
+        fun dataIsLoaded(userData: User)
+    }
+
+    fun getCurrentUser(currentUserData: CurrentUserData) {
+        refUsers.child(currentId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val post = snapshot.getValue(User::class.java) ?: User()
+                currentUserData.dataIsLoaded(post)
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
+    fun getFriendRequests(friendRequests: FriendRequests) {
+        refFriendRequests.child(currentId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                requests.clear()
+                val post = snapshot.children
+                post.forEach {
+                    it.getValue(Friend::class.java)?.let {it1 -> requests.add(it1)}
+                }
+                friendRequests.dataIsLoaded(requests)
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     fun readMessages(messageStatus: MessageStatus) {
@@ -135,6 +169,10 @@ class DataBaseHelper() {
         refMessages.child(currentId).child(_id).removeValue()
     }
 
+    fun deleteRequest(_id: String) {
+        refFriendRequests.child(currentId).child(_id).removeValue()
+    }
+
     fun readItems(key: String, itemStatus: ItemStatus) {
         refList.child(key).child("shoppingItems")
             .addValueEventListener(object : ValueEventListener {
@@ -188,12 +226,16 @@ class DataBaseHelper() {
         })
     }
 
-    fun friendRequest(_id: String) {
-        if (_id == currentId)
+    fun friendRequest(user: User) {
+        if (user._id == currentId)
             return
-        val refFriendsRequest = "friend_requests/$_id/$currentId"
-
-        database.reference.child(refFriendsRequest).setValue(currentId)
+        val refFriendsRequest = "friend_requests/${user._id}/$currentId"
+        getCurrentUser(object : DataBaseHelper.CurrentUserData {
+            override fun dataIsLoaded(userData: User) {
+                val currentUser = Friend(userData._id, userData.email, userData.name, userData.phone)
+                database.reference.child(refFriendsRequest).setValue(currentUser)
+            }
+        })
     }
 }
 

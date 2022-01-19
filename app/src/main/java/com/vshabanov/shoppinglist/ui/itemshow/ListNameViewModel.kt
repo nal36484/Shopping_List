@@ -14,11 +14,11 @@ class ListNameViewModel(application: Application): AndroidViewModel(application)
 
     @SuppressLint("StaticFieldLeak")
     val context = application.applicationContext
-    var settings = context.getSharedPreferences("listId", Context.MODE_PRIVATE).getString("listId","").toString()
+    var listId = context.getSharedPreferences("listId", Context.MODE_PRIVATE).getString("listId","").toString()
 
     private var _itemsList = MutableLiveData<MutableList<ShoppingItem>>()
 
-    val data = DataBaseHelper().readItems(settings, object : DataBaseHelper.ItemStatus{
+    val data = DataBaseHelper().readItems(listId, object : DataBaseHelper.ItemStatus{
         override fun dataIsLoaded(shoppingItem: MutableList<ShoppingItem>) {
             _itemsList.value = shoppingItem
         }

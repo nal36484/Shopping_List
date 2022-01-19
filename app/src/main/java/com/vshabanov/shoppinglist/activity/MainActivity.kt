@@ -1,14 +1,13 @@
 package com.vshabanov.shoppinglist.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,18 +16,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
+import com.vshabanov.shoppinglist.data_classes.User
 import com.vshabanov.shoppinglist.databinding.ActivityMainBinding
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var auth: FirebaseAuth
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
@@ -47,26 +45,38 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
+
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_contacts, R.id.notificationsFragment
+                R.id.nav_home, R.id.nav_contacts, R.id.notificationsFragment,
+                R.id.friendRequestFragment, R.id.logOutFragment
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         val headerView: View = navView.getHeaderView(0)
-       /* val email: TextView = headerView.findViewById(R.id.userEmail)
-        val phone: TextView = headerView.findViewById(R.id.userPhone)
-        if (currentUser == null) {
-            email.text = getString(R.string.nav_header_title)
-            phone.text = getString(R.string.nav_header_subtitle)
+        if ((auth.currentUser?.isAnonymous == true)|| (auth.currentUser?.uid == null)) {
+            headerView.findViewById<LinearLayout>(R.id.haveUser).visibility = View.GONE
+            headerView.findViewById<LinearLayout>(R.id.noHaveUser).visibility = View.VISIBLE
         } else {
-            email.text = currentUser.email
-            phone.text = currentUser.displayName
-        }*/
+            headerView.findViewById<LinearLayout>(R.id.haveUser).visibility = View.VISIBLE
+            headerView.findViewById<LinearLayout>(R.id.noHaveUser).visibility = View.GONE
+        }
+        if (headerView.findViewById<LinearLayout>(R.id.noHaveUser).isVisible)
+            headerView.findViewById<Button>(R.id.authorization).setOnClickListener {
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+        DataBaseHelper().getCurrentUser(object : DataBaseHelper.CurrentUserData {
+            override fun dataIsLoaded(userData: User) {
+                if (headerView.findViewById<LinearLayout>(R.id.haveUser).isVisible) {
+                    headerView.findViewById<TextView>(R.id.userPhone).text = userData.phone
+                    headerView.findViewById<TextView>(R.id.userName).text = userData.name
+                }
+            }
+        })
     }
 
     override fun onStart() {
@@ -115,9 +125,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.personal -> startActivity(Intent(this,LoginActivity::class.java))
-            R.id.personal2 -> { Firebase.auth.signOut()
-                startActivity(Intent(this, MainActivity::class.java)) }
+            R.id.personal -> if ((auth.currentUser?.isAnonymous == true)|| (auth.currentUser == null)) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "НЕОБХОДИМО",
+                    Snackbar.LENGTH_LONG
+                )
+                    .setTextColor(0XFF81C784.toInt())
+                    .setAction("авторизоваться", View.OnClickListener {
+                        startActivity(Intent(this, LoginActivity::class.java))
+                    })
+
+                    .show()
+            } else {
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.userInfoFragment)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

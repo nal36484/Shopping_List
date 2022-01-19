@@ -1,53 +1,70 @@
 package com.vshabanov.shoppinglist.adapters
 
-import android.text.Editable
-import android.text.TextWatcher
+
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.R
+import android.widget.AdapterView
+import com.vshabanov.shoppinglist.activity.MainActivity
 
-class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickListener: ClickListener):
+class AddProductAdapter(var items: MutableList<ShoppingItem>, var context: Context,
+                        private val clickListener: ClickListener):
     RecyclerView.Adapter<AddProductAdapter.MyViewHolder>() {
+
+    val units: ArrayList<String> = arrayListOf("Штуки","Литры","Килограммы","Граммы")
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var productName: TextView? = null
-        var amount: EditText? = null
+        var amount: TextView? = null
+        var delete: ImageButton? = null
+        var spinner: Spinner? = null
 
         init {
             productName = itemView.findViewById(R.id.productName)
             amount = itemView.findViewById(R.id.productAmount)
+            delete = itemView.findViewById(R.id.productDelete)
+            spinner = itemView.findViewById(R.id.spinnerSelectUnits)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.recycler_view_list_add_products,parent,false)
+        val spinner = itemView.findViewById<Spinner>(R.id.spinnerSelectUnits)
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, units)
+        spinner.adapter = adapter
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val item = items.get(position)
+        val item = items[position]
         holder.productName?.text = item.name
-        holder.amount?.setText(item.amount)
-        holder.amount?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+        holder.amount?.text = item.amount
+        holder.delete?.setOnClickListener {
+            clickListener.onDeleteClick(it, item)
+        }
+        holder.spinner?.setSelection(item.units.toInt())
+        holder.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (view != null) {
+                    clickListener.onSpinnerClick(view, position, item._id)
+                }
+                return
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                clickListener.onItemClick(s.toString(), item)
-            }
-        })
-        holder.productName?.setOnClickListener {
-            clickListener.onNameClick(it, item)
         }
     }
 
@@ -56,7 +73,8 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, private val clickL
     }
 
     interface ClickListener {
-        fun onItemClick(amount: String, shoppingItem: ShoppingItem)
-        fun onNameClick(view: View,shoppingItem: ShoppingItem)
+        //fun onItemClick(amount: String, shoppingItem: ShoppingItem)
+        fun onDeleteClick(view: View, shoppingItem: ShoppingItem)
+        fun onSpinnerClick(view: View, position: Int, _id: String)
     }
 }
