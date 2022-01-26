@@ -19,7 +19,7 @@ import com.vshabanov.shoppinglist.data_classes.Friend
 import com.vshabanov.shoppinglist.data_classes.User
 import com.vshabanov.shoppinglist.databinding.FragmentFriendRequestBinding
 
-class FriendRequestFragment : Fragment(), FriendRequestAdapter.ClickListener {
+class FriendRequestFragment : Fragment() {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     var reference: DatabaseReference = database.reference.child("users")
@@ -27,6 +27,7 @@ class FriendRequestFragment : Fragment(), FriendRequestAdapter.ClickListener {
 
     var requests: MutableList<Friend> = arrayListOf()
     private lateinit var adapter: FriendRequestAdapter
+    private lateinit var clickListener: FriendRequestAdapter.ClickListener
 
     private lateinit var friendRequestViewModel: FriendRequestViewModel
     private var _binding: FragmentFriendRequestBinding? = null
@@ -36,6 +37,16 @@ class FriendRequestFragment : Fragment(), FriendRequestAdapter.ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        clickListener = object : FriendRequestAdapter.ClickListener {
+            override fun onAcceptClick(request: Friend) {
+                writeNewPost(request)
+                DataBaseHelper().deleteRequest(request._id)
+            }
+
+            override fun onDeclineClick(request: Friend) {
+                DataBaseHelper().deleteRequest(request._id)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -50,7 +61,7 @@ class FriendRequestFragment : Fragment(), FriendRequestAdapter.ClickListener {
         initFriendRequestAdapter(root)
         friendRequestViewModel.friendRequests.observe(viewLifecycleOwner, {
             view?.findViewById<RecyclerView>(R.id.recyclerViewFriendRequest)?.adapter =
-                FriendRequestAdapter(it, this)
+                FriendRequestAdapter(it, clickListener)
         })
 
         return root
@@ -59,17 +70,8 @@ class FriendRequestFragment : Fragment(), FriendRequestAdapter.ClickListener {
     private fun initFriendRequestAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFriendRequest)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = FriendRequestAdapter(requests, this)
+        adapter = FriendRequestAdapter(requests, clickListener)
         recyclerView.adapter = adapter
-    }
-
-    override fun onAcceptClick(view: View, request: Friend) {
-        writeNewPost(request)
-        DataBaseHelper().deleteRequest(request._id)
-    }
-
-    override fun onDeclineClick(view: View, request: Friend) {
-        DataBaseHelper().deleteRequest(request._id)
     }
 
     private fun writeNewPost(request: Friend) {

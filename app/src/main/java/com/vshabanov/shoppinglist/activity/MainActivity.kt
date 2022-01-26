@@ -26,6 +26,8 @@ import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.User
 import com.vshabanov.shoppinglist.databinding.ActivityMainBinding
+import com.vshabanov.shoppinglist.databinding.FragmentUserInfoBinding
+import com.vshabanov.shoppinglist.ui.userinfo.UserInfoFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -135,7 +137,6 @@ class MainActivity : AppCompatActivity() {
                     .setAction("авторизоваться", View.OnClickListener {
                         startActivity(Intent(this, LoginActivity::class.java))
                     })
-
                     .show()
             } else {
                 findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.userInfoFragment)

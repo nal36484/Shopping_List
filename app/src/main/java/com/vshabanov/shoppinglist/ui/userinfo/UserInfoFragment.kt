@@ -1,20 +1,20 @@
 package com.vshabanov.shoppinglist.ui.userinfo
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.ACTION_CAMERA_BUTTON
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.KeyEvent
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -26,6 +26,9 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.databinding.FragmentUserInfoBinding
+import android.os.Parcelable
+import java.io.File
+
 
 class UserInfoFragment : Fragment() {
 
@@ -46,6 +49,7 @@ class UserInfoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -104,10 +108,32 @@ class UserInfoFragment : Fragment() {
     }
 
     private fun setPhoto() {
+        var chooserIntent: Intent? = null
         val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        val intentList: ArrayList<Intent> = arrayListOf(camera, pickPhoto)
-        startActivityForResult(camera,1)
+        var intentList: ArrayList<Intent> = arrayListOf()
+        intentList = addIntentToList(context, intentList, camera)
+        intentList = addIntentToList(context, intentList, pickPhoto)
+
+        if (intentList.size > 0) {
+            chooserIntent = Intent.createChooser(intentList.removeAt(intentList.size - 1),
+                context?.getString(R.string.choosePhoto))
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(arrayOf<Parcelable>()))
+        }
+        startActivityForResult(chooserIntent,1)
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun addIntentToList(context: Context?, intentList: ArrayList<Intent>, intent: Intent): ArrayList<Intent> {
+        val resInfo: ArrayList<ResolveInfo> =
+            context?.packageManager?.queryIntentActivities(intent, 0) as ArrayList<ResolveInfo>
+        for (res in resInfo) {
+            val packageName: String = res.activityInfo.packageName
+            val targetedIntent: Intent = Intent(intent)
+            targetedIntent.setPackage(packageName)
+            intentList.add(targetedIntent)
+        }
+        return intentList
     }
 
     override fun onRequestPermissionsResult(
@@ -127,9 +153,32 @@ class UserInfoFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            val photoBitMap = data?.extras?.get("data") as Bitmap
-            photo?.setImageBitmap(photoBitMap)
+        when (requestCode) {
+            1 -> if (resultCode == RESULT_OK) {
+                val bm: Bitmap
+                val imageFile = File(context?.externalCacheDir, "temp")
+                var uri: Uri? = null
+                val isCamera: Boolean = (data == null ||
+                        data.data == null ||
+                        data.data.toString().contains(imageFile.toString()))
+                if (isCamera) {
+                    val photoBitmap = data?.extras?.get("data") as Bitmap
+                    photo?.setImageBitmap(photoBitmap)
+                } else {
+                    if (data != null) {
+                        uri = data.data
+                    }
+                    val imageStream = uri?.let { context?.contentResolver?.openInputStream(it) }
+                    bm = BitmapFactory.decodeStream(imageStream)
+                    photo?.setImageBitmap(bm)
+                }
+            }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        val item = menu.findItem(R.id.personal)
+        item.isVisible = false
     }
 }

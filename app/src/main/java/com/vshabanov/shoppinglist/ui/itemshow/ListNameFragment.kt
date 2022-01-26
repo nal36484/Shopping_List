@@ -28,7 +28,7 @@ import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.databinding.FragmentListNameBinding
 
-class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
+class ListNameFragment : Fragment() {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     var id: String? = Firebase.auth.currentUser?.uid
@@ -39,6 +39,7 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
     private lateinit var settings: SharedPreferences
     var items: MutableList<ShoppingItem> = arrayListOf()
     private lateinit var adapter: ShoppingItemAdapter
+    private lateinit var click: ShoppingItemAdapter.ClickListener
     private lateinit var listNameViewModel: ListNameViewModel
     private var _binding: FragmentListNameBinding? = null
     // This property is only valid between onCreateView and
@@ -48,6 +49,53 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settings = context?.getSharedPreferences("listId", Context.MODE_PRIVATE)!!
+        click = object : ShoppingItemAdapter.ClickListener {
+            override fun onItemClick(shoppingItem: ShoppingItem) {
+                val editor = settings.edit()
+                editor.putString("itemId",shoppingItem._id.toString())
+                editor.apply()
+                view?.findNavController()?.navigate(R.id.editProductFragment)
+            }
+
+            override fun onPriceClick(view: View, shoppingItem: ShoppingItem) {
+                val textView = view.findViewById<TextView>(R.id.textViewPrice)
+                val editText = view.findViewById<EditText>(R.id.editTextPrice)
+                textView.visibility = View.GONE
+                editText.visibility = View.VISIBLE
+                editText.setSelectAllOnFocus(true)
+                editText.requestFocus()
+                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+                editText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+                    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            var price = editText.text.toString()
+                            if (price == "")
+                                price = "0"
+                            referenceList.child(listNameViewModel.listId).child("shoppingItems")
+                                .child(shoppingItem._id).child("price").setValue(price)
+                            if (price == shoppingItem.price) {
+                                textView.visibility = View.VISIBLE
+                                editText.visibility = View.GONE
+                            }
+                            return true
+                        }
+                        return false
+                    }
+                })
+            }
+
+            override fun onChecked(shoppingItem: ShoppingItem) {
+                val status =
+                    if (shoppingItem.status == "false") {
+                        "true"
+                    } else {
+                        "false"
+                    }
+                referenceList.child(listNameViewModel.listId).child("shoppingItems")
+                    .child(shoppingItem._id).child("status").setValue(status)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -63,7 +111,7 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
         val root: View = binding.root
         initShoppingItemAdapter(root)
         listNameViewModel.itemsList.observe(viewLifecycleOwner,{
-            view?.findViewById<RecyclerView>(R.id.recyclerViewProducts)?.adapter = ShoppingItemAdapter(it,this)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewProducts)?.adapter = ShoppingItemAdapter(it,click)
         })
 
         return root
@@ -72,7 +120,7 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
     private fun initShoppingItemAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewProducts)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ShoppingItemAdapter(items,this)
+        adapter = ShoppingItemAdapter(items,click)
         recyclerView.adapter = adapter
     }
 
@@ -110,52 +158,6 @@ class ListNameFragment : Fragment(), ShoppingItemAdapter.ClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onItemClick(view: View,shoppingItem: ShoppingItem) {
-        val editor = settings.edit()
-        editor.putString("itemId",shoppingItem._id.toString())
-        editor.apply()
-        view.findNavController().navigate(R.id.editProductFragment)
-    }
-
-    override fun onPriceClick(view: View, shoppingItem: ShoppingItem) {
-        val textView = view.findViewById<TextView>(R.id.textViewPrice)
-        val editText = view.findViewById<EditText>(R.id.editTextPrice)
-        textView.visibility = View.GONE
-        editText.visibility = View.VISIBLE
-        editText.setSelectAllOnFocus(true)
-        editText.requestFocus()
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-        editText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
-            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    var price = editText.text.toString()
-                    if (price == "")
-                        price = "0"
-                    referenceList.child(listNameViewModel.listId).child("shoppingItems")
-                        .child(shoppingItem._id).child("price").setValue(price)
-                    if (price == shoppingItem.price) {
-                        textView.visibility = View.VISIBLE
-                        editText.visibility = View.GONE
-                    }
-                    return true
-                }
-                return false
-            }
-        })
-    }
-
-    override fun onChecked(view: View, shoppingItem: ShoppingItem) {
-        val status =
-            if (shoppingItem.status == "false") {
-            "true"
-            } else {
-                "false"
-            }
-        referenceList.child(listNameViewModel.listId).child("shoppingItems")
-            .child(shoppingItem._id).child("status").setValue(status)
     }
 }
 

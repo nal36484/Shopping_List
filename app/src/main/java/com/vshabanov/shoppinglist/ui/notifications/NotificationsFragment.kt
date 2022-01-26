@@ -20,7 +20,7 @@ import com.vshabanov.shoppinglist.data_classes.Message
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.databinding.FragmentNotificationsBinding
 
-class NotificationsFragment : Fragment(), NotificationsAdapter.ClickListener {
+class NotificationsFragment : Fragment() {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     var reference: DatabaseReference = database.reference.child("users")
@@ -28,6 +28,7 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.ClickListener {
 
     var messages: MutableList<Message> = arrayListOf()
     private lateinit var adapter: NotificationsAdapter
+    private lateinit var clickListener: NotificationsAdapter.ClickListener
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private var _binding: FragmentNotificationsBinding? = null
@@ -37,7 +38,24 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        clickListener = object : NotificationsAdapter.ClickListener {
+            override fun onAcceptClick(message: Message) {
+                var shoppingList : ShoppingList
+                DataBaseHelper().createList(message.from, message.listId, object : DataBaseHelper.CurrentList {
+                    override fun dataIsLoaded(list: ShoppingList) {
+                        shoppingList = list
+                        writeNewPost(shoppingList)
+                    }
+                })
+                DataBaseHelper().deleteMessage(message._id)
+                Toast.makeText(context, "Список добавлен", Toast.LENGTH_SHORT).show()
+            }
 
+            override fun onDeclineClick(message: Message) {
+                DataBaseHelper().deleteMessage(message._id)
+                Toast.makeText(context, "Отклонено", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -53,7 +71,7 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.ClickListener {
         initNotificationsAdapter(root)
         notificationsViewModel.messages.observe(viewLifecycleOwner, {
             view?.findViewById<RecyclerView>(R.id.recyclerViewNotifications)?.adapter =
-                NotificationsAdapter(it, this)
+                NotificationsAdapter(it, clickListener)
         })
 
         return root
@@ -62,25 +80,8 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.ClickListener {
     private fun initNotificationsAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewNotifications)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = NotificationsAdapter(messages, this)
+        adapter = NotificationsAdapter(messages, clickListener)
         recyclerView.adapter = adapter
-    }
-
-    override fun onAcceptClick(view: View, message: Message) {
-        var shoppingList : ShoppingList
-        DataBaseHelper().createList(message.from, message.listId, object : DataBaseHelper.CurrentList {
-            override fun dataIsLoaded(list: ShoppingList) {
-                shoppingList = list
-                writeNewPost(shoppingList)
-            }
-        })
-        DataBaseHelper().deleteMessage(message._id)
-        Toast.makeText(context, "Список добавлен", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDeclineClick(view: View, message: Message) {
-        DataBaseHelper().deleteMessage(message._id)
-        Toast.makeText(context, "Отклонено", Toast.LENGTH_SHORT).show()
     }
 
     private fun writeNewPost(shoppingList: ShoppingList) {

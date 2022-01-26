@@ -20,10 +20,11 @@ import com.vshabanov.shoppinglist.data_classes.Friend
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.databinding.FragmentSendListBinding
 
-class SendListFragment : Fragment(), ContactsAdapter.ClickListener {
+class SendListFragment : Fragment() {
 
     var friends: MutableList<Friend> = arrayListOf()
     private lateinit var adapter: ContactsAdapter
+    private lateinit var clickListener: ContactsAdapter.ClickListener
     private val selectedFriends: MutableList<String> = arrayListOf()
 
     private lateinit var sendListViewModel: SendListViewModel
@@ -34,6 +35,15 @@ class SendListFragment : Fragment(), ContactsAdapter.ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        clickListener = object : ContactsAdapter.ClickListener {
+            override fun itemChecked(_id: String) {
+                selectedFriends.add(_id)
+            }
+
+            override fun itemUnChecked(_id: String) {
+                selectedFriends.remove(_id)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -48,7 +58,7 @@ class SendListFragment : Fragment(), ContactsAdapter.ClickListener {
         val root: View = binding.root
         initContactsAdapter(root)
         sendListViewModel.friends.observe(viewLifecycleOwner, {
-            view?.findViewById<RecyclerView>(R.id.recyclerViewFriends)?.adapter = ContactsAdapter(it, this)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewFriends)?.adapter = ContactsAdapter(it, clickListener)
         })
 
         return root
@@ -57,7 +67,7 @@ class SendListFragment : Fragment(), ContactsAdapter.ClickListener {
     private fun initContactsAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFriends)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ContactsAdapter(friends, this)
+        adapter = ContactsAdapter(friends, clickListener)
         recyclerView.adapter = adapter
     }
 
@@ -77,13 +87,5 @@ class SendListFragment : Fragment(), ContactsAdapter.ClickListener {
                 view.findNavController().navigate(R.id.nav_home)
             }
         }
-    }
-
-    override fun ItemCheked(view: View, _id: String) {
-        selectedFriends.add(_id)
-    }
-
-    override fun ItemUnCheked(view: View, _id: String) {
-        selectedFriends.remove(_id)
     }
 }

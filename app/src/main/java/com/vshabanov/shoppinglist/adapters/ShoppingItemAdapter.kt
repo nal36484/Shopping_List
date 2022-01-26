@@ -51,11 +51,11 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
         holder.textPrice?.text = item.price + "₽"
         holder.editPrice?.setText(item.price)
         holder.amount?.setOnClickListener {
-            clickListener.onItemClick(it, item)
+            clickListener.onItemClick(item)
         }
         holder.productName?.isChecked = item.status.toBoolean()
         holder.productName?.setOnClickListener {
-            clickListener.onChecked(it, item)
+            clickListener.onChecked(item)
         }
         holder.price?.setOnClickListener {
             clickListener.onPriceClick(it, item)
@@ -75,9 +75,9 @@ class ShoppingItemAdapter(var items: MutableList<ShoppingItem>, private val clic
     }
 
     interface ClickListener {
-        fun onItemClick(view: View, shoppingItem: ShoppingItem)
+        fun onItemClick(shoppingItem: ShoppingItem)
         fun onPriceClick(view: View, shoppingItem: ShoppingItem)
-        fun onChecked(view: View, shoppingItem: ShoppingItem)
+        fun onChecked(shoppingItem: ShoppingItem)
     }
     fun getChecked():MutableList<Boolean> {
         return checkedState

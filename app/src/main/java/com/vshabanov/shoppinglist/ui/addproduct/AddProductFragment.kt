@@ -20,7 +20,7 @@ import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.databinding.FragmentAddProductBinding
 
-class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
+class AddProductFragment : Fragment() {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     var reference: DatabaseReference = database.reference.child("users")
@@ -29,6 +29,7 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
 
     var items: MutableList<ShoppingItem> = arrayListOf()
     private lateinit var adapter: AddProductAdapter
+    private lateinit var clickListener : AddProductAdapter.ClickListener
     private lateinit var addProductViewModel: AddProductViewModel
     private var _binding: FragmentAddProductBinding? = null
     // This property is only valid between onCreateView and
@@ -39,6 +40,19 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         super.onCreate(savedInstanceState)
         listKey = context?.getSharedPreferences("listId", Context.MODE_PRIVATE)
             ?.getString("listId","").toString()
+        clickListener = object : AddProductAdapter.ClickListener {
+            override fun onDeleteClick(shoppingItem: ShoppingItem) {
+                listKey?.let { DataBaseHelper().deleteItem(it,shoppingItem._id) }
+            }
+
+            override fun onSpinnerClick(position: Int, _id: String) {
+                val userId = auth.currentUser?.uid.toString()
+                listKey?.let {
+                    reference.child(userId).child("list").child(it).child("shoppingItems")
+                        .child(_id).child("units").setValue(position.toString())
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -55,16 +69,16 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         initAddProductAdapter(root)
         addProductViewModel.itemsList.observe(viewLifecycleOwner,{
             view?.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)?.adapter =
-                AddProductAdapter(it, requireContext(),this)
+                AddProductAdapter(it, requireContext(),clickListener)
         })
 
         return root
     }
 
-    fun initAddProductAdapter(view: View) {
+    private fun initAddProductAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AddProductAdapter(items, requireContext(),this)
+        adapter = AddProductAdapter(items, requireContext(),clickListener)
         recyclerView.adapter = adapter
     }
 
@@ -91,27 +105,6 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         }
     }
 
-    /*override fun onItemClick(amount: String, shoppingItem: ShoppingItem) {
-        auth.currentUser?.uid?.let {
-            listKey?.let { it1 ->
-                reference.child(it).child("list").child(it1)
-                    .child("shoppingItems").child(shoppingItem._id).child("amount").setValue(amount)
-            }
-        }
-    }*/
-
-    override fun onDeleteClick(view: View, shoppingItem: ShoppingItem) {
-        listKey?.let { DataBaseHelper().deleteItem(it,shoppingItem._id) }
-    }
-
-    override fun onSpinnerClick(view: View, position: Int, _id: String) {
-        val userId = auth.currentUser?.uid.toString()
-        listKey?.let {
-            reference.child(userId).child("list").child(it).child("shoppingItems")
-                .child(_id).child("units").setValue(position.toString())
-        }
-    }
-
     private fun writeNewPost(name: String, amount: String, _id: String?) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
@@ -122,7 +115,6 @@ class AddProductFragment : Fragment(), AddProductAdapter.ClickListener {
         val childUpdates = hashMapOf<String, Any>(
             "$userId/list/$_id/shoppingItems/$key" to postValues,
         )
-
         reference.updateChildren(childUpdates)
     }
 

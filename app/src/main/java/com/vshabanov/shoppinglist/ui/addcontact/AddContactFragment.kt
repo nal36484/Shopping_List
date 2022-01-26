@@ -14,15 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.adapters.SearchContactAdapter
-import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.User
 import com.vshabanov.shoppinglist.databinding.FragmentAddContactBinding
 
-class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
+class AddContactFragment : Fragment() {
 
     var users: MutableList<User> = arrayListOf()
     private lateinit var adapter: SearchContactAdapter
+    private lateinit var clickListener: SearchContactAdapter.ClickListener
 
     private lateinit var addContactViewModel: AddContactViewModel
     private var _binding: FragmentAddContactBinding? = null
@@ -32,6 +32,11 @@ class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        clickListener = object : SearchContactAdapter.ClickListener {
+            override fun onAddClick(user: User) {
+                DataBaseHelper().friendRequest(user)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -52,7 +57,7 @@ class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
     private fun initSearchContactAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewSearchResult)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = SearchContactAdapter(users, this)
+        adapter = SearchContactAdapter(users, clickListener)
         recyclerView.adapter = adapter
     }
 
@@ -68,7 +73,7 @@ class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
                 DataBaseHelper().searchContact(phone, object : DataBaseHelper.UserSearch {
                     override fun dataIsLoaded(users: MutableList<User>) {
                         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewSearchResult)
-                        recyclerView.adapter = SearchContactAdapter(users, this@AddContactFragment)
+                        recyclerView.adapter = SearchContactAdapter(users, clickListener)
                     }
                 })
             }
@@ -77,16 +82,12 @@ class AddContactFragment : Fragment(), SearchContactAdapter.ClickListener {
 
     override fun onStop() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0)
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         super.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onAddClick(view: View, user: User) {
-        DataBaseHelper().friendRequest(user)
     }
 }

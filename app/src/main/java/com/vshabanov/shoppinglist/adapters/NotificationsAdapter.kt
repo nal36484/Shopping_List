@@ -36,10 +36,10 @@ class NotificationsAdapter(var messages: MutableList<Message>,private val clickL
         val message = messages[position]
         holder.from?.text = ("Вам пришёл список, отправитель ${message.nameFrom}")
         holder.accept?.setOnClickListener {
-            clickListener.onAcceptClick(it, message)
+            clickListener.onAcceptClick(message)
         }
         holder.decline?.setOnClickListener {
-            clickListener.onDeclineClick(it, message)
+            clickListener.onDeclineClick(message)
         }
     }
 
@@ -48,7 +48,7 @@ class NotificationsAdapter(var messages: MutableList<Message>,private val clickL
     }
 
     interface ClickListener {
-        fun onAcceptClick(view: View, message: Message)
-        fun onDeclineClick(view: View, message: Message)
+        fun onAcceptClick(message: Message)
+        fun onDeclineClick(message: Message)
     }
 }

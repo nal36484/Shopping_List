@@ -34,10 +34,10 @@ class FriendRequestAdapter(var requests: MutableList<Friend>, private val clickL
         val request = requests[position]
         holder.who?.text = ("Пользователь ${request.email} хочет добавить вас в список контактов")
         holder.accept?.setOnClickListener {
-            clickListener.onAcceptClick(it, request)
+            clickListener.onAcceptClick(request)
         }
         holder.decline?.setOnClickListener {
-            clickListener.onDeclineClick(it, request)
+            clickListener.onDeclineClick(request)
         }
     }
 
@@ -46,7 +46,7 @@ class FriendRequestAdapter(var requests: MutableList<Friend>, private val clickL
     }
 
     interface ClickListener {
-        fun onAcceptClick(view: View, request: Friend)
-        fun onDeclineClick(view: View, request: Friend)
+        fun onAcceptClick(request: Friend)
+        fun onDeclineClick(request: Friend)
     }
 }

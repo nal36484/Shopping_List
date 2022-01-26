@@ -42,7 +42,7 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
         holder.editName?.setText(list.name)
         holder.count?.text = list.count
         holder.nameList?.setOnClickListener {
-            clickListener.onListClick(it,list)
+            clickListener.onListClick(list)
         }
         holder.menu?.setOnClickListener{
             clickListener.onMenuClick(it, list)
@@ -54,7 +54,7 @@ class ShoppingListAdapter(var shoppingList: MutableList<ShoppingList>, private v
     }
 
     interface ClickListener {
-        fun onListClick(view: View, shoppingList: ShoppingList)
+        fun onListClick(shoppingList: ShoppingList)
         fun onMenuClick(view: View, shoppingList: ShoppingList)
     }
 }

@@ -27,7 +27,7 @@ import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.databinding.FragmentHomeBinding
 
-class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
+class HomeFragment() : Fragment() {
 
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     var id: String? = Firebase.auth.currentUser?.uid
@@ -37,6 +37,7 @@ class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
     private lateinit var settings: SharedPreferences
     var shoppingList: MutableList<ShoppingList> = arrayListOf()
     private lateinit var adapter: ShoppingListAdapter
+    private lateinit var click: ShoppingListAdapter.ClickListener
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
@@ -47,6 +48,20 @@ class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settings = context?.getSharedPreferences("listId", Context.MODE_PRIVATE)!!
+        click = object : ShoppingListAdapter.ClickListener {
+            override fun onListClick(shoppingList: ShoppingList) {
+                val editor = settings.edit()
+                editor.putString("listId",shoppingList._id)
+                editor.apply()
+
+                val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id)
+                view?.findNavController()?.navigate(action)
+            }
+
+            override fun onMenuClick(view: View, shoppingList: ShoppingList) {
+                showMenu(view.findViewById(R.id.menu_status), shoppingList)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -62,7 +77,7 @@ class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
         val root: View = binding.root
         initShoppingListAdapter(root)
         homeViewModel.shoppingList.observe(viewLifecycleOwner,{
-            view?.findViewById<RecyclerView>(R.id.recyclerViewList)?.adapter = ShoppingListAdapter(it,this)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewList)?.adapter = ShoppingListAdapter(it,click)
         })
 
         return root
@@ -71,7 +86,7 @@ class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
     private fun initShoppingListAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewList)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ShoppingListAdapter(shoppingList,this)
+        adapter = ShoppingListAdapter(shoppingList,click)
         recyclerView.adapter = adapter
     }
 
@@ -108,18 +123,18 @@ class HomeFragment() : Fragment(), ShoppingListAdapter.ClickListener {
         _binding = null
     }
 
-    override fun onListClick(view: View,shoppingList: ShoppingList) {
-        val editor = settings.edit()
-        editor.putString("listId",shoppingList._id)
-        editor.apply()
-
-        val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id)
-                view.findNavController().navigate(action)
-    }
-
-    override fun onMenuClick(view: View, shoppingList: ShoppingList) {
-        showMenu(view.findViewById(R.id.menu_status), shoppingList)
-    }
+//    override fun onListClick(view: View,shoppingList: ShoppingList) {
+//        val editor = settings.edit()
+//        editor.putString("listId",shoppingList._id)
+//        editor.apply()
+//
+//        val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id)
+//                view.findNavController().navigate(action)
+//    }
+//
+//    override fun onMenuClick(view: View, shoppingList: ShoppingList) {
+//        showMenu(view.findViewById(R.id.menu_status), shoppingList)
+//    }
 
     private fun isAnonymous(): Boolean {
         val currentUser = FirebaseAuth.getInstance().currentUser

@@ -17,7 +17,7 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, var context: Conte
                         private val clickListener: ClickListener):
     RecyclerView.Adapter<AddProductAdapter.MyViewHolder>() {
 
-    val units: ArrayList<String> = arrayListOf("Штуки","Литры","Килограммы","Граммы")
+    private val units: ArrayList<String> = arrayListOf("Штуки","Литры","Килограммы","Граммы")
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var productName: TextView? = null
@@ -47,7 +47,7 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, var context: Conte
         holder.productName?.text = item.name
         holder.amount?.text = item.amount
         holder.delete?.setOnClickListener {
-            clickListener.onDeleteClick(it, item)
+            clickListener.onDeleteClick(item)
         }
         holder.spinner?.setSelection(item.units.toInt())
         holder.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -58,7 +58,7 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, var context: Conte
                 id: Long
             ) {
                 if (view != null) {
-                    clickListener.onSpinnerClick(view, position, item._id)
+                    clickListener.onSpinnerClick(position, item._id)
                 }
                 return
             }
@@ -74,7 +74,7 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, var context: Conte
 
     interface ClickListener {
         //fun onItemClick(amount: String, shoppingItem: ShoppingItem)
-        fun onDeleteClick(view: View, shoppingItem: ShoppingItem)
-        fun onSpinnerClick(view: View, position: Int, _id: String)
+        fun onDeleteClick(shoppingItem: ShoppingItem)
+        fun onSpinnerClick(position: Int, _id: String)
     }
 }

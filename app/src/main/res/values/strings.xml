@@ -62,4 +62,5 @@
     <string name="shoppingList">Список покупок</string>
     <string name="requests">Запросы в друзья</string>
     <string name="settings">Настройки</string>
+    <string name="choosePhoto">Выберите фото</string>
 </resources>

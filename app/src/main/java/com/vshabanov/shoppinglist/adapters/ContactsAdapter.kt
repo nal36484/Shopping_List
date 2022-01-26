@@ -47,15 +47,15 @@ class ContactsAdapter(var friends: MutableList<Friend>, private val clickListene
         holder.checkBox?.setOnClickListener {
             checkedState[position] = !checkedState[position]
             if (checkedState[position])
-                clickListener.ItemCheked(it, friend._id)
+                clickListener.itemChecked(friend._id)
             else
-                clickListener.ItemUnCheked(it, friend._id)
+                clickListener.itemUnChecked(friend._id)
         }
     }
 
     interface ClickListener {
-        fun ItemCheked(view: View, _id: String)
-        fun ItemUnCheked(view: View, _id: String)
+        fun itemChecked(_id: String)
+        fun itemUnChecked(_id: String)
     }
 
     override fun getItemCount(): Int {

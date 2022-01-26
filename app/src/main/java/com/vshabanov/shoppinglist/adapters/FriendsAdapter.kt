@@ -10,8 +10,7 @@ import com.squareup.picasso.Picasso
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.data_classes.Friend
 
-class FriendsAdapter(var friends: MutableList<Friend>):
-    RecyclerView.Adapter<FriendsAdapter.MyViewHolder>() {
+class FriendsAdapter(var friends: MutableList<Friend>): RecyclerView.Adapter<FriendsAdapter.MyViewHolder>() {
 
         class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             var avatar: ImageView? = null
