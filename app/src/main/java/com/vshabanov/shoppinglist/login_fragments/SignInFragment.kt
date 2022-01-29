@@ -53,10 +53,10 @@ class SignInFragment : Fragment() {
     private fun login(view: View) {
         signIn.setOnClickListener {
             if (TextUtils.isEmpty(email.text.toString())) {
-                email.setError("Please enter email")
+                email.error = "Please enter email"
                 return@setOnClickListener
             } else if (TextUtils.isEmpty(password.text.toString())) {
-                email.setError("Please enter login")
+                email.error = "Please enter password"
                 return@setOnClickListener
             }
             auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())

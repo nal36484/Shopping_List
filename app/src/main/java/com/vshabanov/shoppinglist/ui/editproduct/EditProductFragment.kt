@@ -46,17 +46,17 @@ class EditProductFragment : Fragment() {
         _binding = FragmentEditProductBinding.inflate(inflater, container, false)
         val root: View = binding.root
         itemName = binding.editTextItemName
-        editProductViewModel.itemName.observe(viewLifecycleOwner, {
+        editProductViewModel.itemName.observe(viewLifecycleOwner) {
             itemName?.setText(it)
-        })
+        }
         itemAmount = binding.editTextItemAmount
-        editProductViewModel.itemAmount.observe(viewLifecycleOwner, {
+        editProductViewModel.itemAmount.observe(viewLifecycleOwner) {
             itemAmount?.setText(it)
-        })
+        }
         itemPrice = binding.editTextItemPrice
-        editProductViewModel.itemPrice.observe(viewLifecycleOwner, {
+        editProductViewModel.itemPrice.observe(viewLifecycleOwner) {
             itemPrice?.setText(it)
-        })
+        }
 
         return root
     }

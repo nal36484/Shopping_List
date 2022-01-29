@@ -67,10 +67,10 @@ class AddProductFragment : Fragment() {
 
         val root: View = binding.root
         initAddProductAdapter(root)
-        addProductViewModel.itemsList.observe(viewLifecycleOwner,{
+        addProductViewModel.itemsList.observe(viewLifecycleOwner) {
             view?.findViewById<RecyclerView>(R.id.recyclerViewAddProduct)?.adapter =
-                AddProductAdapter(it, requireContext(),clickListener)
-        })
+                AddProductAdapter(it, requireContext(), clickListener)
+        }
 
         return root
     }

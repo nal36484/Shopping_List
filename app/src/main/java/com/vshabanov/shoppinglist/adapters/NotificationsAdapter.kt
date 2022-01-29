@@ -1,5 +1,6 @@
 package com.vshabanov.shoppinglist.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ class NotificationsAdapter(var messages: MutableList<Message>,private val clickL
         return MyViewHolder(itemView)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val message = messages[position]
         holder.from?.text = ("Вам пришёл список, отправитель ${message.nameFrom}")

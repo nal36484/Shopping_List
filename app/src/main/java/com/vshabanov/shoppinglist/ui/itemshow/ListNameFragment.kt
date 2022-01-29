@@ -78,6 +78,7 @@ class ListNameFragment : Fragment() {
                                 textView.visibility = View.VISIBLE
                                 editText.visibility = View.GONE
                             }
+                            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
                             return true
                         }
                         return false
@@ -110,9 +111,10 @@ class ListNameFragment : Fragment() {
 
         val root: View = binding.root
         initShoppingItemAdapter(root)
-        listNameViewModel.itemsList.observe(viewLifecycleOwner,{
-            view?.findViewById<RecyclerView>(R.id.recyclerViewProducts)?.adapter = ShoppingItemAdapter(it,click)
-        })
+        listNameViewModel.itemsList.observe(viewLifecycleOwner) {
+            view?.findViewById<RecyclerView>(R.id.recyclerViewProducts)?.adapter =
+                ShoppingItemAdapter(it, click)
+        }
 
         return root
     }
@@ -144,13 +146,13 @@ class ListNameFragment : Fragment() {
         super.onPause()
         var itemCount = 0
         var statusCount = 0
-        listNameViewModel.itemsList.observe(viewLifecycleOwner, {
+        listNameViewModel.itemsList.observe(viewLifecycleOwner) {
             itemCount = it.size
             it.forEach {
                 if (it.status == "true")
                     statusCount++
             }
-        })
+        }
         referenceList.child(listNameViewModel.listId).child("count")
             .setValue("$statusCount/$itemCount")
     }

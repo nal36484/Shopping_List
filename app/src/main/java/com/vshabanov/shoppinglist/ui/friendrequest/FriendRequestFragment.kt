@@ -59,10 +59,10 @@ class FriendRequestFragment : Fragment() {
         _binding = FragmentFriendRequestBinding.inflate(inflater, container, false)
         val root: View = binding.root
         initFriendRequestAdapter(root)
-        friendRequestViewModel.friendRequests.observe(viewLifecycleOwner, {
+        friendRequestViewModel.friendRequests.observe(viewLifecycleOwner) {
             view?.findViewById<RecyclerView>(R.id.recyclerViewFriendRequest)?.adapter =
                 FriendRequestAdapter(it, clickListener)
-        })
+        }
 
         return root
     }

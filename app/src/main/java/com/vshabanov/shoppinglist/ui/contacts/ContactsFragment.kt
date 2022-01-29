@@ -50,9 +50,10 @@ class ContactsFragment : Fragment() {
         _binding = FragmentContactsBinding.inflate(inflater,container,false)
         val root: View = binding.root
         initContactsAdapter(root)
-        contactsViewModel.friends.observe(viewLifecycleOwner, {
-            view?.findViewById<RecyclerView>(R.id.recyclerViewContacts)?.adapter = FriendsAdapter(it)
-        })
+        contactsViewModel.friends.observe(viewLifecycleOwner) {
+            view?.findViewById<RecyclerView>(R.id.recyclerViewContacts)?.adapter =
+                FriendsAdapter(it)
+        }
 
         return root
     }

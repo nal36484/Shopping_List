@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.databinding.FragmentUserInfoBinding
 import android.os.Parcelable
+import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import java.io.File
 
 
@@ -65,14 +66,14 @@ class UserInfoFragment : Fragment() {
         phone = binding.editTextPhone
         userName = binding.editTextUserName
         photo = binding.imageViewPhoto
-        userInfoViewModel.user.observe(viewLifecycleOwner, {
+        userInfoViewModel.user.observe(viewLifecycleOwner) {
             userName?.setText(it.name)
             phone?.setText(it.phone)
             Picasso.get()
                 .load(it.photo)
                 .placeholder(R.drawable.ic_default_user)
                 .into(photo)
-        })
+        }
 
         return root
     }
@@ -163,6 +164,7 @@ class UserInfoFragment : Fragment() {
                         data.data.toString().contains(imageFile.toString()))
                 if (isCamera) {
                     val photoBitmap = data?.extras?.get("data") as Bitmap
+                    DataBaseHelper().loadImage(photoBitmap)
                     photo?.setImageBitmap(photoBitmap)
                 } else {
                     if (data != null) {
@@ -170,6 +172,7 @@ class UserInfoFragment : Fragment() {
                     }
                     val imageStream = uri?.let { context?.contentResolver?.openInputStream(it) }
                     bm = BitmapFactory.decodeStream(imageStream)
+                    DataBaseHelper().loadImage(bm)
                     photo?.setImageBitmap(bm)
                 }
             }

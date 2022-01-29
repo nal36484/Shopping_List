@@ -57,9 +57,10 @@ class SendListFragment : Fragment() {
         _binding = FragmentSendListBinding.inflate(inflater, container, false)
         val root: View = binding.root
         initContactsAdapter(root)
-        sendListViewModel.friends.observe(viewLifecycleOwner, {
-            view?.findViewById<RecyclerView>(R.id.recyclerViewFriends)?.adapter = ContactsAdapter(it, clickListener)
-        })
+        sendListViewModel.friends.observe(viewLifecycleOwner) {
+            view?.findViewById<RecyclerView>(R.id.recyclerViewFriends)?.adapter =
+                ContactsAdapter(it, clickListener)
+        }
 
         return root
     }

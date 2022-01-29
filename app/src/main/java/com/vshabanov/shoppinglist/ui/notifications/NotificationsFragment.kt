@@ -69,10 +69,10 @@ class NotificationsFragment : Fragment() {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         initNotificationsAdapter(root)
-        notificationsViewModel.messages.observe(viewLifecycleOwner, {
+        notificationsViewModel.messages.observe(viewLifecycleOwner) {
             view?.findViewById<RecyclerView>(R.id.recyclerViewNotifications)?.adapter =
                 NotificationsAdapter(it, clickListener)
-        })
+        }
 
         return root
     }

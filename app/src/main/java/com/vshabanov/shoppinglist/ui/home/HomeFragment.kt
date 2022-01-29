@@ -1,5 +1,6 @@
 package com.vshabanov.shoppinglist.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -53,11 +54,9 @@ class HomeFragment() : Fragment() {
                 val editor = settings.edit()
                 editor.putString("listId",shoppingList._id)
                 editor.apply()
-
                 val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id)
                 view?.findNavController()?.navigate(action)
             }
-
             override fun onMenuClick(view: View, shoppingList: ShoppingList) {
                 showMenu(view.findViewById(R.id.menu_status), shoppingList)
             }
@@ -76,9 +75,11 @@ class HomeFragment() : Fragment() {
 
         val root: View = binding.root
         initShoppingListAdapter(root)
-        homeViewModel.shoppingList.observe(viewLifecycleOwner,{
-            view?.findViewById<RecyclerView>(R.id.recyclerViewList)?.adapter = ShoppingListAdapter(it,click)
-        })
+        homeViewModel.shoppingList.observe(viewLifecycleOwner) {
+            adapter = ShoppingListAdapter(it, click)
+            view?.findViewById<RecyclerView>(R.id.recyclerViewList)?.adapter =
+                adapter
+        }
 
         return root
     }
@@ -97,6 +98,7 @@ class HomeFragment() : Fragment() {
             view.findNavController().navigate(R.id.addListFragment) }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showMenu(view: View, shoppingList: ShoppingList) {
         val menuPop = PopupMenu(context,view)
         val inflater = menuPop.menuInflater
@@ -110,7 +112,10 @@ class HomeFragment() : Fragment() {
                     val action = HomeFragmentDirections.actionNavHomeToSendListFragment(shoppingList._id)
                     view.findNavController().navigate(action)
                 }
-                R.id.save_settings -> Toast.makeText(context, "Изменить невозможно", Toast.LENGTH_SHORT).show()
+                R.id.save_settings -> {
+                    shoppingList.stateName = "true"
+                    adapter.notifyDataSetChanged()
+                }
                 R.id.delete_settings -> DataBaseHelper().deleteList(shoppingList._id)
             }
             true
@@ -123,48 +128,8 @@ class HomeFragment() : Fragment() {
         _binding = null
     }
 
-//    override fun onListClick(view: View,shoppingList: ShoppingList) {
-//        val editor = settings.edit()
-//        editor.putString("listId",shoppingList._id)
-//        editor.apply()
-//
-//        val action = HomeFragmentDirections.actionNavHomeToListNameFragment(shoppingList._id)
-//                view.findNavController().navigate(action)
-//    }
-//
-//    override fun onMenuClick(view: View, shoppingList: ShoppingList) {
-//        showMenu(view.findViewById(R.id.menu_status), shoppingList)
-//    }
-
     private fun isAnonymous(): Boolean {
         val currentUser = FirebaseAuth.getInstance().currentUser
         return currentUser?.isAnonymous == true
     }
-
-    /*private fun changeListName(view: View, shoppingList: ShoppingList) {
-        val textView = view.findViewById<TextView>(R.id.textViewListName)
-        val editText = view.findViewById<EditText>(R.id.editTextListName)
-        textView.visibility = View.GONE
-        editText.visibility = View.VISIBLE
-        editText.setSelectAllOnFocus(true)
-        editText.requestFocus()
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-        editText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
-            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    var name = editText.text.toString()
-                    if (name == "")
-                        name = "Новый Список"
-                    referenceList.child(shoppingList._id).child("name").setValue(name)
-                    if (name == shoppingList.name) {
-                        textView.visibility = View.VISIBLE
-                        editText.visibility = View.GONE
-                    }
-                    return true
-                }
-                return false
-            }
-        })
-    }*/
 }

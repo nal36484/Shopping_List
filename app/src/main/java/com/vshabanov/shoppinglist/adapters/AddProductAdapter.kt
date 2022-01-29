@@ -17,7 +17,7 @@ class AddProductAdapter(var items: MutableList<ShoppingItem>, var context: Conte
                         private val clickListener: ClickListener):
     RecyclerView.Adapter<AddProductAdapter.MyViewHolder>() {
 
-    private val units: ArrayList<String> = arrayListOf("Штуки","Литры","Килограммы","Граммы")
+    private val units: Array<out String> = context.resources.getStringArray(R.array.units)
 
     class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var productName: TextView? = null

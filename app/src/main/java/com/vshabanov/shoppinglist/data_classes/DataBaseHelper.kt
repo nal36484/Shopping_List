@@ -1,10 +1,15 @@
 package com.vshabanov.shoppinglist.data_classes
 
+import android.graphics.Bitmap
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.vshabanov.shoppinglist.activity.MainActivity
+import java.io.ByteArrayOutputStream
 
 class DataBaseHelper() {
 
@@ -16,12 +21,14 @@ class DataBaseHelper() {
     val requests: MutableList<Friend> = arrayListOf()
 
     val currentId: String = Firebase.auth.currentUser?.uid.toString()
-    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private val refUsers : DatabaseReference = database.reference.child("users")
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
+    private val refUsers: DatabaseReference = database.reference.child("users")
     private var refList: DatabaseReference = refUsers.child(currentId).child("list")
     private val refFriends : DatabaseReference = refUsers.child(currentId).child("friends")
     private val refMessages: DatabaseReference = database.reference.child("messages")
     private val refFriendRequests: DatabaseReference = database.reference.child("friend_requests")
+    private val refStorage: StorageReference = storage.reference.child("users")
 
     fun updatePhones(contacts: MutableList<Friend>) {
         val reference = refUsers
@@ -33,7 +40,7 @@ class DataBaseHelper() {
                             val friend =
                                 Friend(post._id, post.email, contact.name, contact.phone, post.photo)
                             currentId.let { it1 ->
-                                database.getReference().child("users").child(it1)
+                                refUsers.child(it1)
                                     .child("friends").child(it.key.toString())
                                     .setValue(friend)
                                     .addOnFailureListener{
@@ -205,8 +212,6 @@ class DataBaseHelper() {
         mapDialog["$refReceivingUser/$messageKey"] = mapMessage
 
         database.reference.updateChildren(mapDialog)
-            //.addOnSuccessListener{ Log.d(MainActivity.TAG, "Success") }
-            //.addOnFailureListener { Log.d(MainActivity.TAG, "Fail") }
     }
 
     fun searchContact(phone: String, userSearch: UserSearch) {
@@ -236,6 +241,24 @@ class DataBaseHelper() {
                 database.reference.child(refFriendsRequest).setValue(currentUser)
             }
         })
+    }
+
+    fun loadImage(bm: Bitmap) {
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+        val imagePath = refStorage.child(currentId).child("photo_profile")
+        imagePath.putBytes(data)
+        imagePath.downloadUrl.addOnCompleteListener {
+            if (it.isSuccessful) {
+                val photoUrl = it.result.toString()
+                refUsers.child(currentId).child("photo").setValue(photoUrl)
+            }
+        }
+    }
+
+    fun setName(_id: String, name: String) {
+        refList.child(_id).child("name").setValue(name)
     }
 }
 

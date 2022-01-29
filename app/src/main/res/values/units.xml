@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="units">
+        <item>Штуки</item>
+        <item>Литры</item>
+        <item>Килограммы</item>
+        <item>Граммы</item>
+    </string-array>
+</resources>

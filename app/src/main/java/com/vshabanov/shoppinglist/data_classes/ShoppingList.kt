@@ -7,6 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 data class ShoppingList(
     var _id: String = "",
     var name: String = "Новый список",
+    var stateName: String = "false",
     var count: String = "0/0",
     var shoppingItems: HashMap<String,ShoppingItem> = hashMapOf<String,ShoppingItem>()
 ) {

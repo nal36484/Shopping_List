@@ -1,5 +1,6 @@
 package com.vshabanov.shoppinglist.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class FriendRequestAdapter(var requests: MutableList<Friend>, private val clickL
         return MyViewHolder(itemView)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val request = requests[position]
         holder.who?.text = ("Пользователь ${request.email} хочет добавить вас в список контактов")
