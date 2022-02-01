@@ -89,4 +89,16 @@ class SendListFragment : Fragment() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        sendListViewModel.dataBaseHelper.refFriends
+            .removeEventListener(sendListViewModel.dataBaseHelper.refListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sendListViewModel.dataBaseHelper.refFriends
+            .addValueEventListener(sendListViewModel.dataBaseHelper.refListener)
+    }
 }

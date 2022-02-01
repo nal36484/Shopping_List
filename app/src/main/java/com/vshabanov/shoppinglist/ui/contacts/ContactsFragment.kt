@@ -73,12 +73,28 @@ class ContactsFragment : Fragment() {
             view.findNavController().navigate(R.id.addContactFragment)
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        contactsViewModel.dataBaseHelper.refFriends
+            .removeEventListener(contactsViewModel.dataBaseHelper.refListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        contactsViewModel.dataBaseHelper.refFriends
+            .addValueEventListener(contactsViewModel.dataBaseHelper.refListener)
+    }
+
     private fun checkPermission(context: Context) {
         val permissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
         if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
             contactsViewModel.readContacts()
         } else {
-            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.READ_CONTACTS), request)
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                request)
         }
     }
 

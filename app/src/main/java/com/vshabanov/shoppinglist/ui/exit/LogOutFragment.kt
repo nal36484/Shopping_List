@@ -18,6 +18,7 @@ class LogOutFragment : Fragment() {
         val auth = Firebase.auth
         auth.signOut()
         startActivity(Intent(context, MainActivity::class.java))
+        activity?.finish()
     }
 
     override fun onCreateView(

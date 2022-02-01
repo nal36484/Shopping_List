@@ -10,7 +10,8 @@ class HomeViewModel : ViewModel() {
 
     private var _shoppingList = MutableLiveData<MutableList<ShoppingList>>()
 
-    val data = DataBaseHelper().readList(object : DataBaseHelper.ListStatus {
+    val dataBaseHelper = DataBaseHelper()
+    val data = dataBaseHelper.readList(object : DataBaseHelper.ListStatus {
         override fun dataIsLoaded(shoppingList: MutableList<ShoppingList>) {
             _shoppingList.value = shoppingList
         }

@@ -10,9 +10,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.activity.MainActivity
+import com.vshabanov.shoppinglist.databinding.FragmentSignInBinding
 
 class SignInFragment : Fragment() {
 
@@ -20,6 +23,11 @@ class SignInFragment : Fragment() {
     lateinit var email: EditText
     lateinit var password: EditText
     lateinit var signIn: Button
+    private lateinit var signInViewModel: SignInViewModel
+    private var _binding: FragmentSignInBinding? = null
+    // This property is only valid between onCreateView and
+    //    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +35,23 @@ class SignInFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false)
+        signInViewModel =
+                ViewModelProvider(this).get(SignInViewModel::class.java)
+
+        _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+        signInViewModel.registration.observe(viewLifecycleOwner) {
+            if (it) {
+                startActivity(Intent(context, MainActivity::class.java))
+                activity?.finish()
+            }
+        }
+
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,14 +60,6 @@ class SignInFragment : Fragment() {
         email = view.findViewById(R.id.edit_login)
         password = view.findViewById(R.id.edit_password)
         login(view)
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
     private fun login(view: View) {
@@ -62,7 +74,7 @@ class SignInFragment : Fragment() {
             auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        startActivity(Intent(context, MainActivity::class.java))
+                        signInViewModel.changeData()
                     } else {
                         Toast.makeText(context,it.exception.toString(), Toast.LENGTH_LONG).show()
                     }

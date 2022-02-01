@@ -16,7 +16,8 @@ class EditProductViewModel(application: Application): AndroidViewModel(applicati
     var listKey = context.getSharedPreferences("listId", Context.MODE_PRIVATE).getString("listId","").toString()
     var itemKey = context.getSharedPreferences("listId", Context.MODE_PRIVATE).getString("itemId","").toString()
 
-    val data = DataBaseHelper().readItems(listKey, object : DataBaseHelper.ItemStatus{
+    val dataBaseHelper = DataBaseHelper()
+    val data = dataBaseHelper.readItems(listKey, object : DataBaseHelper.ItemStatus{
         override fun dataIsLoaded(shoppingItem: MutableList<ShoppingItem>) {
             for (item in shoppingItem)
                 if (item._id == itemKey) {

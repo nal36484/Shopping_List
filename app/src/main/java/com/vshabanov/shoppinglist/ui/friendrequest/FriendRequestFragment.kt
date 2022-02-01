@@ -67,6 +67,18 @@ class FriendRequestFragment : Fragment() {
         return root
     }
 
+    override fun onPause() {
+        super.onPause()
+        friendRequestViewModel.dataBaseHelper.refFriendRequests
+            .removeEventListener(friendRequestViewModel.dataBaseHelper.refListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        friendRequestViewModel.dataBaseHelper.refFriendRequests
+            .addValueEventListener(friendRequestViewModel.dataBaseHelper.refListener)
+    }
+
     private fun initFriendRequestAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFriendRequest)
         recyclerView.layoutManager = LinearLayoutManager(context)

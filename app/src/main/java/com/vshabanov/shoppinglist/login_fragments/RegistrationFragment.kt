@@ -82,6 +82,7 @@ class RegistrationFragment : Fragment() {
                         currentUserDb?.child("name")?.setValue(emailAddress.text.toString())
                         Toast.makeText(context,"Registration Success.",Toast.LENGTH_LONG).show()
                         startActivity(Intent(context, MainActivity::class.java))
+                        activity?.finish()
                     } else {
                         Toast.makeText(context,it.exception.toString(),Toast.LENGTH_LONG).show()
                     }

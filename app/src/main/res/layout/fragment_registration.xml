@@ -11,16 +11,17 @@
         android:id="@+id/registrationEmailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="200dp"
         android:ems="10"
         android:hint="@string/email"
+        android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck"
-        android:importantForAutofill="no" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableStart="@drawable/ic_action_email"
+        tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck,TextContrastCheck" />
 
     <EditText
         android:id="@+id/registrationPassword"
@@ -34,6 +35,7 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="@+id/registrationEmailAddress"
         app:layout_constraintTop_toBottomOf="@+id/registrationEmailAddress"
+        android:drawableStart="@drawable/ic_action_password"
         tools:ignore="TextContrastCheck" />
 
     <EditText
@@ -48,6 +50,7 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="@+id/registrationPassword"
         app:layout_constraintTop_toBottomOf="@+id/registrationPassword"
+        android:drawableStart="@drawable/ic_action_phone"
         tools:ignore="TextContrastCheck" />
 
     <Button

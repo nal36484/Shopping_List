@@ -10,14 +10,15 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/add"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/add"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingList">
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ShoppingList.NoActionBar"/>
         <activity
             android:name=".activity.MainActivity"

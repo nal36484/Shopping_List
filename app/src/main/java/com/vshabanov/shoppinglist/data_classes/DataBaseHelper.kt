@@ -19,16 +19,20 @@ class DataBaseHelper() {
     val messages: MutableList<Message> = arrayListOf()
     val users: MutableList<User> = arrayListOf()
     val requests: MutableList<Friend> = arrayListOf()
+    lateinit var refListener: ValueEventListener
+    lateinit var refMessageListener: ValueEventListener
 
     val currentId: String = Firebase.auth.currentUser?.uid.toString()
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
     private val refUsers: DatabaseReference = database.reference.child("users")
-    private var refList: DatabaseReference = refUsers.child(currentId).child("list")
-    private val refFriends : DatabaseReference = refUsers.child(currentId).child("friends")
-    private val refMessages: DatabaseReference = database.reference.child("messages")
-    private val refFriendRequests: DatabaseReference = database.reference.child("friend_requests")
+    val refList: DatabaseReference = refUsers.child(currentId).child("list")
+    val refFriends : DatabaseReference = refUsers.child(currentId).child("friends")
+    val refMessages: DatabaseReference = database.reference.child("messages").child(currentId)
+    val refFriendRequests: DatabaseReference = database.reference.child("friend_requests")
+        .child(currentId)
     private val refStorage: StorageReference = storage.reference.child("users")
+    lateinit var refItems :DatabaseReference
 
     fun updatePhones(contacts: MutableList<Friend>) {
         val reference = refUsers
@@ -43,16 +47,12 @@ class DataBaseHelper() {
                                 refUsers.child(it1)
                                     .child("friends").child(it.key.toString())
                                     .setValue(friend)
-                                    .addOnFailureListener{
-                                        Log.d(MainActivity.TAG, "Fail")
-                                    }
                             }
                         }
                     }
                 }
             }
             override fun onCancelled(error: DatabaseError) {
-                Log.d(MainActivity.TAG, "Fail")
             }
         })
     }
@@ -94,7 +94,7 @@ class DataBaseHelper() {
     }
 
     fun getFriendRequests(friendRequests: FriendRequests) {
-        refFriendRequests.child(currentId).addValueEventListener(object : ValueEventListener {
+        refListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 requests.clear()
                 val post = snapshot.children
@@ -105,11 +105,12 @@ class DataBaseHelper() {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-        })
+        }
+        refFriendRequests.addValueEventListener(refListener)
     }
 
     fun readMessages(messageStatus: MessageStatus) {
-        refMessages.child(currentId).addValueEventListener(object : ValueEventListener {
+        refMessageListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 messages.clear()
                 val post = snapshot.children
@@ -120,7 +121,8 @@ class DataBaseHelper() {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-        })
+        }
+        refMessages.addValueEventListener(refMessageListener)
     }
 
     fun createList(userId: String, listId: String, list: CurrentList) {
@@ -136,7 +138,7 @@ class DataBaseHelper() {
     }
 
     fun readFriends(friendStatus : FriendStatus) {
-        refFriends.addValueEventListener(object : ValueEventListener {
+        refListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 friends.clear()
                 val post = snapshot.children
@@ -147,11 +149,12 @@ class DataBaseHelper() {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-        })
+        }
+        refFriends.addValueEventListener(refListener)
     }
 
     fun readList(listStatus: ListStatus) {
-        refList.addValueEventListener(object : ValueEventListener {
+        refListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 shoppingList.clear()
                 val post = snapshot.children
@@ -162,7 +165,8 @@ class DataBaseHelper() {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-        })
+        }
+        refList.addValueEventListener(refListener)
     }
     fun deleteList(_id: String) {
         refList.child(_id).removeValue()
@@ -177,12 +181,12 @@ class DataBaseHelper() {
     }
 
     fun deleteRequest(_id: String) {
-        refFriendRequests.child(currentId).child(_id).removeValue()
+        refFriendRequests.child(_id).removeValue()
     }
 
     fun readItems(key: String, itemStatus: ItemStatus) {
-        refList.child(key).child("shoppingItems")
-            .addValueEventListener(object : ValueEventListener {
+        refItems = refList.child(key).child("shoppingItems")
+        refListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 shoppingItems.clear()
                 val post = snapshot.children
@@ -193,7 +197,8 @@ class DataBaseHelper() {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-        })
+        }
+        refItems.addValueEventListener(refListener)
     }
 
     fun sendMessage(receivingUserId: String, listId: String) {
@@ -260,6 +265,7 @@ class DataBaseHelper() {
     fun setName(_id: String, name: String) {
         refList.child(_id).child("name").setValue(name)
     }
+
 }
 
 

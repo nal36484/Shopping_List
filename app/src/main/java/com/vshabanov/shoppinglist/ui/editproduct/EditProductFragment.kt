@@ -63,6 +63,8 @@ class EditProductFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        editProductViewModel.dataBaseHelper.refItems
+            .removeEventListener(editProductViewModel.dataBaseHelper.refListener)
         val name = itemName?.text.toString()
         val amount = itemAmount?.text.toString()
         val price = itemPrice?.text.toString()
@@ -72,6 +74,12 @@ class EditProductFragment : Fragment() {
             .child(editProductViewModel.itemKey).child("amount").setValue(amount)
         referenceList.child(editProductViewModel.listKey).child("shoppingItems")
             .child(editProductViewModel.itemKey).child("price").setValue(price)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        editProductViewModel.dataBaseHelper.refItems
+            .addValueEventListener(editProductViewModel.dataBaseHelper.refListener)
     }
 
     override fun onStop() {

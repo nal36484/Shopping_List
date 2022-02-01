@@ -17,7 +17,8 @@ class AddProductViewModel(application: Application): AndroidViewModel(applicatio
 
     private var _itemsList = MutableLiveData<MutableList<ShoppingItem>>()
 
-    val data = DataBaseHelper().readItems(settings, object : DataBaseHelper.ItemStatus{
+    val dataBaseHelper = DataBaseHelper()
+    val data = dataBaseHelper.readItems(settings, object : DataBaseHelper.ItemStatus{
         override fun dataIsLoaded(shoppingItem: MutableList<ShoppingItem>) {
             _itemsList.value = shoppingItem
         }

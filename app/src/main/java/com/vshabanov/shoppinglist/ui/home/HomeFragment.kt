@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
 import com.vshabanov.shoppinglist.adapters.ShoppingListAdapter
@@ -121,6 +122,16 @@ class HomeFragment() : Fragment() {
             true
         })
         menuPop.show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        homeViewModel.dataBaseHelper.refList.removeEventListener(homeViewModel.dataBaseHelper.refListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.dataBaseHelper.refList.addValueEventListener(homeViewModel.dataBaseHelper.refListener)
     }
 
     override fun onDestroyView() {

@@ -45,7 +45,8 @@ class ContactsViewModel(application: Application): AndroidViewModel(application)
 
     private var _friends = MutableLiveData<MutableList<Friend>>()
 
-    val data = DataBaseHelper().readFriends(object : DataBaseHelper.FriendStatus {
+    val dataBaseHelper = DataBaseHelper()
+    val data = dataBaseHelper.readFriends(object : DataBaseHelper.FriendStatus {
         override fun dataIsLoaded(friends: MutableList<Friend>) {
             _friends.value = friends
         }

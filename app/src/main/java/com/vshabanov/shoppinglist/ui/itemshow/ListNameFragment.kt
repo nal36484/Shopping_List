@@ -144,6 +144,8 @@ class ListNameFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        listNameViewModel.dataBaseHelper.refItems
+            .removeEventListener(listNameViewModel.dataBaseHelper.refListener)
         var itemCount = 0
         var statusCount = 0
         listNameViewModel.itemsList.observe(viewLifecycleOwner) {
@@ -155,6 +157,12 @@ class ListNameFragment : Fragment() {
         }
         referenceList.child(listNameViewModel.listId).child("count")
             .setValue("$statusCount/$itemCount")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listNameViewModel.dataBaseHelper.refItems
+            .addValueEventListener(listNameViewModel.dataBaseHelper.refListener)
     }
 
     override fun onDestroyView() {

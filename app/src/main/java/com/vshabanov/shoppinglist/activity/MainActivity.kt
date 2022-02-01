@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.R
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
+//        if (auth.currentUser != null)
+//            Firebase.database.setPersistenceEnabled(true)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -70,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         if (headerView.findViewById<LinearLayout>(R.id.noHaveUser).isVisible)
             headerView.findViewById<Button>(R.id.authorization).setOnClickListener {
                 startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
         DataBaseHelper().getCurrentUser(object : DataBaseHelper.CurrentUserData {
             override fun dataIsLoaded(userData: User) {
@@ -102,22 +106,16 @@ class MainActivity : AppCompatActivity() {
             signInAnonymously()
         }
     }
-    // delete this
-    companion object {
-        const val TAG = "AnonymousAuth"
-    }
 
     private fun signInAnonymously() {
         auth.signInAnonymously()
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInAnonymously:success")
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInAnonymously:failure", task.exception)
                     Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
                     updateUI(null)
@@ -136,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                     .setTextColor(0XFF81C784.toInt())
                     .setAction("авторизоваться", View.OnClickListener {
                         startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
                     })
                     .show()
             } else {

@@ -31,11 +31,4 @@ class LoginFragment : Fragment() {
         registration.setOnClickListener{ view.findNavController().navigate(R.id.registrationFragment) }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
 }

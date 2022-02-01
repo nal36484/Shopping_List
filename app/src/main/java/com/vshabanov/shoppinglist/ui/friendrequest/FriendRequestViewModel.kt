@@ -10,7 +10,8 @@ class FriendRequestViewModel: ViewModel() {
 
     val _friendRequests = MutableLiveData<MutableList<Friend>>()
 
-    val data = DataBaseHelper().getFriendRequests(object : DataBaseHelper.FriendRequests {
+    val dataBaseHelper = DataBaseHelper()
+    val data = dataBaseHelper.getFriendRequests(object : DataBaseHelper.FriendRequests {
         override fun dataIsLoaded(requests: MutableList<Friend>) {
             _friendRequests.value = requests
         }

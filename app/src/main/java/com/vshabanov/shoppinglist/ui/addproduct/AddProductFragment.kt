@@ -118,6 +118,18 @@ class AddProductFragment : Fragment() {
         reference.updateChildren(childUpdates)
     }
 
+    override fun onPause() {
+        super.onPause()
+        addProductViewModel.dataBaseHelper.refItems
+            .removeEventListener(addProductViewModel.dataBaseHelper.refListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        addProductViewModel.dataBaseHelper.refItems
+            .addValueEventListener(addProductViewModel.dataBaseHelper.refListener)
+    }
+
     override fun onStop() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)

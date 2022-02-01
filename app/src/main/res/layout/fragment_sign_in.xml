@@ -11,15 +11,16 @@
         android:id="@+id/edit_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="200dp"
         android:ems="10"
         android:hint="@string/login"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:importantForAutofill="no"
+        android:drawableStart="@drawable/ic_action_email"
         tools:ignore="TextContrastCheck"/>
 
     <EditText
@@ -27,14 +28,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/ic_action_password"
         android:ems="10"
         android:hint="@string/password"
+        android:importantForAutofill="no"
         android:inputType="textPassword"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="@+id/edit_login"
         app:layout_constraintTop_toBottomOf="@+id/edit_login"
-        android:importantForAutofill="no"
-        tools:ignore="TextContrastCheck"/>
+        tools:ignore="TextContrastCheck" />
 
     <Button
         android:id="@+id/button_sign_in"

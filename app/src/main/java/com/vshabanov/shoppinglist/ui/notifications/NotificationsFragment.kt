@@ -77,6 +77,22 @@ class NotificationsFragment : Fragment() {
         return root
     }
 
+    override fun onPause() {
+        super.onPause()
+        notificationsViewModel.dataBaseHelper.refMessages
+            .removeEventListener(notificationsViewModel.dataBaseHelper.refMessageListener)
+        notificationsViewModel.dataBaseHelper.refFriends
+            .removeEventListener(notificationsViewModel.dataBaseHelper.refListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        notificationsViewModel.dataBaseHelper.refMessages
+            .addValueEventListener(notificationsViewModel.dataBaseHelper.refMessageListener)
+        notificationsViewModel.dataBaseHelper.refFriends
+            .addValueEventListener(notificationsViewModel.dataBaseHelper.refListener)
+    }
+
     private fun initNotificationsAdapter(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewNotifications)
         recyclerView.layoutManager = LinearLayoutManager(context)
