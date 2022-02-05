@@ -24,6 +24,10 @@
             android:id="@+id/logOutFragment"
             android:icon="@drawable/iq_exit"
             android:title="@string/exit" />
+        <item
+            android:id="@+id/settingsFragment"
+            android:icon="@drawable/ic_action_password"
+            android:title="@string/action_settings" />
 
     </group>
 </menu>

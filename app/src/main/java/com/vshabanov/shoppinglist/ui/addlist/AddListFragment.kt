@@ -16,7 +16,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.vshabanov.shoppinglist.R
+import com.vshabanov.shoppinglist.activity.MainActivity
 import com.vshabanov.shoppinglist.data_classes.ShoppingList
+import com.vshabanov.shoppinglist.util.hideKeyBoard
 
 class AddListFragment : Fragment() {
     var database: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -56,8 +58,9 @@ class AddListFragment : Fragment() {
     }
 
     override fun onStop() {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+        activity?.hideKeyBoard(requireView())
         super.onStop()
     }
 

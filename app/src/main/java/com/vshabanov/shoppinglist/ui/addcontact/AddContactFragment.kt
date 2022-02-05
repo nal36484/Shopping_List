@@ -17,6 +17,7 @@ import com.vshabanov.shoppinglist.adapters.SearchContactAdapter
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.User
 import com.vshabanov.shoppinglist.databinding.FragmentAddContactBinding
+import com.vshabanov.shoppinglist.util.hideKeyBoard
 
 class AddContactFragment : Fragment() {
 
@@ -81,8 +82,9 @@ class AddContactFragment : Fragment() {
     }
 
     override fun onStop() {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+        activity?.hideKeyBoard(requireView())
         super.onStop()
     }
 

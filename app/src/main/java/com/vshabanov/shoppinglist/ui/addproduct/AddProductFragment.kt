@@ -19,6 +19,7 @@ import com.vshabanov.shoppinglist.adapters.AddProductAdapter
 import com.vshabanov.shoppinglist.data_classes.DataBaseHelper
 import com.vshabanov.shoppinglist.data_classes.ShoppingItem
 import com.vshabanov.shoppinglist.databinding.FragmentAddProductBinding
+import com.vshabanov.shoppinglist.util.hideKeyBoard
 
 class AddProductFragment : Fragment() {
 
@@ -131,8 +132,9 @@ class AddProductFragment : Fragment() {
     }
 
     override fun onStop() {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+        activity?.hideKeyBoard(requireView())
         super.onStop()
     }
 }
